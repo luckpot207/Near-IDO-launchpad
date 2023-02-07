@@ -3,36 +3,65 @@ import { mode } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme({
   fonts: {
+    heading: "'DM Sans', cursive",
     body: "'Nunito Sans', sans-serif",
-    heading: "'Comfortaa', cursive"
   },
   config: {
     initialColorMode: "light"
   },
   colors: {
     brand: {
-      50: "#f8c676",
-      100: "#f7bd5f",
-      200: "#f5b349",
-      300: "#f4aa32",
+      50: "#F9FAFB",
+      100: "#E5E7EB",
+      200: "#f8c676",
+      300: "#f7bd5f",
       400: "#f3a01b",
-      500: "#db9018",
+      500: "#993FF4",
       600: "#c28016",
       700: "#aa7013",
       800: "#926010",
-      900: "#7a500e"
+      900: "#391b56"
+    },
+    rock: {
+      50: "#F9FAFB",
+      100: "#E5E7EB",
+      200: "#D5B5FF",
+      300: "#D1D5DB",
+      400: "#9CA3AF",
+      500: "#993FF4",
+      600: "#c28016",
+      700: "#aa7013",
+      800: "#4B5563",
+      900: "#374151"
     }
   },
   styles: {
     global: (props: any) => ({
       body: {
-        backgroundColor: mode("white", "gray.700")(props)
-      }
+        backgroundColor: mode("white", "brand.900")(props),
+        color: mode("brand.500", "white")(props)
+      },
+      heading: {
+        color: mode("brand.500", "white")(props)
+      },
+      h1: {
+        color: mode('rock.900', 'gray.500')(props)
+      },
+      h2: {
+        color: mode('rock.200', 'black')(props)
+      },
+      h3: {
+        color: mode('rock.800', 'white')(props)
+      },
+      h5: {
+        color: mode('rock.900', 'white')(props)
+      },
     })
   }
 }) as (ThemeBase & {
   colors: (typeof themeBase.colors) & {
-    brand: ColorHues
+    brand: ColorHues,
+    rock: ColorHues
   }
 });
 
