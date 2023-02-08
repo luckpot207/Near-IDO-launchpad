@@ -13,6 +13,7 @@ export default function Account() {
         marginX="auto"
         paddingX="6"
         paddingY="8"
+        shadow="lg"
         border='1px solid'
         borderRadius="2xl"
         borderColor='rock.300'
