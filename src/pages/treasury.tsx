@@ -1,18 +1,17 @@
-import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import TokenCard from "../components/TokenCard";
+import TitleCard from "../components/TitleCard";
 import SEAT from "../assets/img/icons/seat.svg"
 import { token1, token2, token3, token4, token5 } from "../utils/tokens";
 
 export default function Treasury() {
   return (
-    <Box as="main" padding={{ base: "4", md: "8" }} maxWidth="5xl" marginX="auto">
-      <Box maxWidth="2xl" marginX="auto" borderRadius="lg" paddingX="6" paddingY="8" >
-        <Heading fontSize="5xl" as='h1'>Treasury</Heading>
-      </Box>
+    <>
+      <TitleCard title="Treasury" />
       <Flex
-        marginX="auto"
-        paddingX="6"
-        paddingY="8"
+        width='100%'
+        marginY="4"
+        padding="8"
         shadow="lg"
         border='1px solid'
         borderRadius="2xl"
@@ -71,6 +70,6 @@ export default function Treasury() {
           <TokenCard token={token4} />
         </Flex>
       </Flex>
-    </Box>
+    </>
   )
 }

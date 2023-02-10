@@ -4,12 +4,11 @@ import { ListingDetail } from "../types/listing";
 import { shortMonthNames } from "../utils/const";
 
 interface Props {
-  id: number
   listing: ListingDetail,
   tokenName: string
 }
 
-export default function CreationCard({ listing, id, tokenName }: Props) {
+export default function CreationCard({ listing, tokenName }: Props) {
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
   return (

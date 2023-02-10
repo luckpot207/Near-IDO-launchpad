@@ -8,12 +8,13 @@ interface Props {
   listing: ListingDetail
 }
 
-export default function SwapCard({ listing, id }: Props) {
+export default function ListCard({ listing, id }: Props) {
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
   return (
     <Flex
       minHeight="14"
+      minWidth='12'
       shadow="lg"
       paddingY="4"
       paddingX="8"
@@ -22,7 +23,6 @@ export default function SwapCard({ listing, id }: Props) {
       borderColor='rock.300'
       borderRadius='20px'
       flexDirection='column'
-      minWidth='440px'
     >
       <Box width='100%' margin='10px'>
         <Text as='h1' fontSize='20px' textAlign='start'>Swap {id}</Text>
@@ -41,13 +41,13 @@ export default function SwapCard({ listing, id }: Props) {
           bgColor='rock.50'
           margin='10 0px'
         >
-          <Box width='100%' margin='5px'>
+          <Box width='100%'>
             <Text as='h1' fontSize='14px' textAlign='start'>From</Text>
             <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.fromToken.supply}</Text>
           </Box>
           <Flex width='100%' justifyContent='end' flexDirection='column'>
             <Flex margin='5px' justifyContent='end'>
-              <Text as='h2' fontSize='18px' textAlign='end' marginTop='10px' width='max-content'>{listing.fromToken.name}</Text>
+              <Text as='h2' fontSize='1vw' textAlign='end' marginTop='10px' width='max-content'>{listing.fromToken.name}</Text>
             </Flex >
             <Flex justifyContent='end' margin='5px'>
               <Image src={listing.fromToken.icon} />
@@ -68,7 +68,7 @@ export default function SwapCard({ listing, id }: Props) {
           borderColor='rock.100'
           borderRadius='10px'
           bgColor='rock.50'
-          margin='10 0px'
+          margin='10px'
         >
           <Box width='100%' margin='5px'>
             <Text as='h1' fontSize='14px' textAlign='start'>To</Text>
@@ -76,9 +76,9 @@ export default function SwapCard({ listing, id }: Props) {
           </Box>
           <Flex width='100%' justifyContent='end' flexDirection='column'>
             <Flex margin='5px' justifyContent='end'>
-              <Text as='h2' fontSize='18px' textAlign='end' marginTop='10px' width='max-content'>{listing.toToken.name}</Text>
+              <Text as='h2' fontSize='1vw' textAlign='end' marginTop='10px' width='max-content'>{listing.toToken.name}</Text>
             </Flex >
-            <Flex justifyContent='end' margin='5px' >
+            <Flex justifyContent='end' margin='5px'>
               <Image src={listing.toToken.icon} />
               <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.toToken.symbol}</Text>
             </Flex>
