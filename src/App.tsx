@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Flex } from "@chakra-ui/react";
-import Header from "./pages/header";
+import Header from "./pages/layout/header";
+import Footer from "./pages/layout/footer";
 import Listings from "./pages/listings";
 import Treasury from "./pages/treasury";
 import Account from "./pages/account";
 import Create from "./pages/create";
 import Swap from "./pages/swap";
-import NoPage from "./pages/404";
+import NoPage from "./pages/layout/404";
 import "./App.css";
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
           maxWidth="5xl"
           marginX="auto"
           flexDirection="column"
-          height="calc(100vh - 80px)"
+          justifyContent='center'
+        // height="calc(100vh - 80px)"
         >
           <Routes>
             <Route path="/" element={<Listings />} />
@@ -31,6 +33,7 @@ function App() {
             <Route path="*" element={<NoPage />} />
           </Routes>
         </Flex>
+        <Footer />
       </Router>
     </div>
   );

@@ -3,16 +3,13 @@ import {
   Box,
   Flex,
   IconButton,
-  useColorModeValue,
   useColorMode,
   Image,
   Spacer,
   Button,
   Text
 } from "@chakra-ui/react"
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import BlackLogo from "../assets/img/pegasus_black.png"
-import WhiteLogo from "../assets/img/pegasus_white.png"
+import { useColor } from "../../hooks";
 
 const NAV_LINKS = [
   {
@@ -38,10 +35,7 @@ const NAV_LINKS = [
 ]
 
 export default function Header() {
-  const BackgroundColorChanger = useColorModeValue("white", "brand.900");
-  const ColorModeChangerIcon = useColorModeValue(MoonIcon, SunIcon);
-  const ColorModeChanger = useColorModeValue('gray.700', 'white');
-  const LogoModeChanger = useColorModeValue(BlackLogo, WhiteLogo);
+  const color = useColor();
   const { toggleColorMode } = useColorMode();
 
   return (
@@ -57,11 +51,11 @@ export default function Header() {
       paddingX="8"
       alignItems="center"
       zIndex={99999}
-      bgColor={BackgroundColorChanger}
+      bgColor={color.background}
     >
       <Box w='10%' >
         <Link to='/'>
-          <Image src={LogoModeChanger} />
+          <Image src={color.logoMode} />
         </Link>
       </Box>
       <Spacer />
@@ -78,11 +72,10 @@ export default function Header() {
       <Flex gap="5" as="div" width='ls' justifyContent='center'>
         <IconButton
           aria-label="Switch theme"
-          icon={<ColorModeChangerIcon />}
+          icon={<color.changeMode />}
           isRound
           variant="solid"
           onClick={toggleColorMode}
-          color={ColorModeChanger}
         />
         <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid'>
           Connect Wallet

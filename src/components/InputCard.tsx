@@ -1,17 +1,19 @@
 import { Flex, Input, Text } from '@chakra-ui/react';
 import { useColor } from '../hooks';
+import { directionProp } from '../utils/style';
 
 interface Props {
   title: string
   placeholder: string
   required: boolean
   setData: Function
+  direction?: directionProp
 }
 
-export default function InputCard({ title, placeholder, required, setData }: Props) {
+export default function InputCard({ title, placeholder, required, setData, direction = directionProp.column }: Props) {
   const color = useColor();
   return (
-    <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='4'>
+    <Flex justifyContent='start' alignItems='center' flexDirection={direction} marginTop='4'>
       <Flex width='100%' paddingLeft='2'>
         <Text as='h3' fontSize='14px' textAlign='start'>
           {title}
@@ -24,7 +26,7 @@ export default function InputCard({ title, placeholder, required, setData }: Pro
         paddingY='2'
         paddingX='5'
         borderRadius='2xl'
-        bgColor={color.border}
+        bgColor={color.inputbg}
         marginTop='5px'
         alignItems='center'
         placeholder={placeholder}

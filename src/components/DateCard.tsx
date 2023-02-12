@@ -24,7 +24,7 @@ export default function DateCard({ title, placeholder, required, setData }: Prop
         paddingY='2'
         paddingX='5'
         borderRadius='2xl'
-        bgColor={color.border}
+        bgColor={color.inputbg}
         marginTop='5px'
         alignItems='center'
         placeholder={placeholder}

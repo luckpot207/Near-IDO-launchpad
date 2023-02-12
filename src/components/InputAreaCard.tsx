@@ -1,40 +1,38 @@
-import { Flex, Select, Text } from '@chakra-ui/react';
+import { Flex, Textarea, Text } from '@chakra-ui/react';
 import { useColor } from '../hooks';
 
 interface Props {
   title: string
-  placeholder: string
+  placeholder?: string
   required: boolean
   setData: Function
 }
 
-export default function SelectCard({ title, placeholder = '', required, setData }: Props) {
+export default function InputAreaCard({ title, placeholder = '', required, setData }: Props) {
   const color = useColor();
   return (
-    <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='4'>
+    <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='4' width='full'>
       <Flex width='100%' paddingLeft='2'>
         <Text as='h3' fontSize='14px' textAlign='start'>
           {title}
           {required && <Text as='span' color={color.required}> *</Text>}
         </Text>
       </Flex>
-      <Select
+      <Textarea
         width='100%'
-        minHeight='10'
+        minHeight='112px'
+        paddingY='2'
+        paddingX='5'
         borderRadius='2xl'
         bgColor={color.inputbg}
         marginTop='5px'
         alignItems='center'
         placeholder={placeholder}
-        _placeholderShown={{ color: color.placeholder }}
+        _placeholder={{ color: color.placeholder }}
         fontSize='18px'
         color={color.input}
         onChange={e => setData(e.target.value)}
-      >
-        <option value='1'>Token 1</option>
-        <option value='2'>Token 2</option>
-        <option value='3'>Token 3</option>
-      </Select>
+      />
     </Flex>
   )
 }

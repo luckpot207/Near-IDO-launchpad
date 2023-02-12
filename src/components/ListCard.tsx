@@ -1,4 +1,5 @@
 import { Box, Flex, Text, Image, VStack, Progress, Button } from "@chakra-ui/react";
+import { useColor } from "../hooks";
 import Arrow from "../assets/img/icons/arrow-down.svg"
 import { ListingDetail } from "../types/listing";
 import { shortMonthNames } from "../utils/const";
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function ListCard({ listing, id }: Props) {
+  const color = useColor();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
   return (
@@ -20,7 +22,7 @@ export default function ListCard({ listing, id }: Props) {
       paddingX="8"
       alignItems="center"
       border='1px solid'
-      borderColor='rock.300'
+      borderColor={color.cardBorder}
       borderRadius='20px'
       flexDirection='column'
     >

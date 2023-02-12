@@ -1,20 +1,20 @@
-import { Flex, Text, Input, useColorModeValue, Select } from "@chakra-ui/react";
-import TitleCard from "../components/TitleCard";
+import { Flex, Text, Input, useColorModeValue, Select } from '@chakra-ui/react';
+import TitleCard from '../components/TitleCard';
 
 export default function Swap() {
-  const InputColorChanger = useColorModeValue("rock.900", "black");
+  const InputColorChanger = useColorModeValue('rock.900', 'black');
 
   return (
-    <>
-      <TitleCard title="Beta Swap" />
-      <Flex justifyContent='center'>
+    < >
+      <TitleCard title='Beta Swap' />
+      <Flex justifyContent='center' >
         <Flex
-          maxWidth="lg"
-          marginY="4"
-          padding="8"
-          shadow="lg"
+          maxWidth='lg'
+          marginY='4'
+          padding='8'
+          shadow='lg'
           border='1px solid'
-          borderRadius="2xl"
+          borderRadius='2xl'
           borderColor='rock.300'
           flexDirection='column'
         >
@@ -27,14 +27,14 @@ export default function Swap() {
             </Flex>
             <Input
               width='100%'
-              minHeight="10"
-              paddingY="2"
-              paddingX="5"
+              minHeight='10'
+              paddingY='2'
+              paddingX='5'
               borderRadius='2xl'
               bgColor='rock.50'
               marginTop='5px'
               alignItems='center'
-              placeholder="$ NEW Token Name"
+              placeholder='$ NEW Token Name'
               _placeholder={{ color: 'rock.300' }}
               fontSize='18px'
               color={InputColorChanger}
@@ -46,12 +46,12 @@ export default function Swap() {
             </Flex>
             <Select
               width='100%'
-              minHeight="10"
+              minHeight='10'
               borderRadius='2xl'
               bgColor='rock.50'
               marginTop='5px'
               alignItems='center'
-              placeholder="Select an existing token or enter a new token account ID"
+              placeholder='Select an existing token or enter a new token account ID'
               _placeholder={{ color: 'red' }}
               fontSize='18px'
               color={InputColorChanger}
@@ -67,12 +67,12 @@ export default function Swap() {
             </Flex>
             <Select
               width='100%'
-              minHeight="10"
+              minHeight='10'
               borderRadius='2xl'
               bgColor='rock.50'
               marginTop='5px'
               alignItems='center'
-              placeholder="Select an existing token or enter a new token account ID"
+              placeholder='Select an existing token or enter a new token account ID'
               _placeholder={{ color: 'red' }}
               fontSize='18px'
               color={InputColorChanger}
@@ -89,18 +89,18 @@ export default function Swap() {
               </Flex>
               <Input
                 width='100%'
-                minHeight="10"
-                paddingY="2"
-                paddingX="5"
+                minHeight='10'
+                paddingY='2'
+                paddingX='5'
                 borderRadius='2xl'
                 bgColor='rock.50'
                 marginTop='5px'
                 alignItems='center'
-                placeholder="Select an existing token or enter a new token account ID"
+                placeholder='Select an existing token or enter a new token account ID'
                 _placeholder={{ color: 'rock.300' }}
                 fontSize='18px'
                 color={InputColorChanger}
-                type="date"
+                type='date'
               />
             </Flex>
             <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='10px' width='45%'>
@@ -109,18 +109,18 @@ export default function Swap() {
               </Flex>
               <Input
                 width='100%'
-                minHeight="10"
-                paddingY="2"
-                paddingX="5"
+                minHeight='10'
+                paddingY='2'
+                paddingX='5'
                 borderRadius='2xl'
                 bgColor='rock.50'
                 marginTop='5px'
                 alignItems='center'
-                placeholder="Select an existing token or enter a new token account ID"
+                placeholder='Select an existing token or enter a new token account ID'
                 _placeholder={{ color: 'rock.300' }}
                 fontSize='18px'
                 color={InputColorChanger}
-                type="date"
+                type='date'
               />
             </Flex>
           </Flex>
