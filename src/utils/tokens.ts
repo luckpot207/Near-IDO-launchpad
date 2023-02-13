@@ -9,18 +9,18 @@ export const token1: FtTokenDetail = {
   name: 'Tether USD',
   symbol: 'USDT.e',
   icon: USDT,
-  supply: 0.0,
+  supply: 541025,
   price: 0
 };
 export const token2: FtTokenDetail = {
   name: 'Discovol Token',
   symbol: 'DISC',
   icon: DISC,
-  supply: 0.0,
+  supply: 13892458,
   price: 0
 };
 export const token3: FtTokenDetail = {
-  name: 'Wrapped Near fungible token',
+  name: 'Wrapped NEAR',
   symbol: 'NEAR',
   icon: NEAR,
   supply: 0.0,

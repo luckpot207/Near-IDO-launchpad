@@ -309,10 +309,10 @@ export default function Create() {
             <Text as='h3' fontSize='14px' textAlign='start'>
               DISCLAIMER
             </Text>
-            <Text as='h3' fontSize='14px' textAlign='start' marginTop='2' color={color.placeholder}>
+            <Text as='h3' fontSize='14px' textAlign='start' marginY='4' color={color.placeholder}>
               Kindly click the pay button to establish crypto payment gateway. Once payment is completed, you’ll be redirected to the confirmation page. Your submission may / may not be listed due to the nature of your project and bound to Pegasus Terms & Conditions. In the event if your submission is rejected, you get a full refund to the original addressee.
             </Text>
-            <Button colorScheme='purple' position='absolute' right='18%' bottom='9.5%' onClick={() => setSubmitOpen(true)}>PAY & SUBMIT</Button>
+            <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' position='relative' onClick={() => setSubmitOpen(true)} color={'white'}>PAY & SUBMIT</Button>
           </Flex>
         </Flex>
       )}

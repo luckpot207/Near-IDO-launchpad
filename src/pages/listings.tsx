@@ -29,10 +29,10 @@ export default function Listings() {
   return (
     <>
       <TitleCard title="Live Listings" />
-      <Grid templateColumns='repeat(2, 1fr)' gap={10} paddingY="4">
-        <ListCard id={1} listing={listing1} />
-        <ListCard id={2} listing={listing2} />
-        <ListCard id={3} listing={listing3} />
+      <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY="4">
+        <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
+        <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} />
+        <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} />
       </Grid>
     </>
   )

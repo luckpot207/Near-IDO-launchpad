@@ -18,7 +18,7 @@ function App() {
         <Flex
           as="main"
           padding={{ base: "4", md: "8" }}
-          maxWidth="5xl"
+          maxWidth="7xl"
           marginX="auto"
           flexDirection="column"
           justifyContent='center'
