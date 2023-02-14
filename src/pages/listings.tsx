@@ -1,8 +1,10 @@
-import { Grid } from "@chakra-ui/react";
+import { Grid,GridItem } from "@chakra-ui/react";
 import ListCard from "../components/ListCard";
 import TitleCard from "../components/TitleCard";
+import SettingBlank from "../components/SettingBlank";
 import { ListingDetail } from "../types/listing";
 import { token1, token2, token3, token4, token5 } from "../utils/tokens";
+import { useState } from 'react';
 
 export default function Listings() {
   const listing1: ListingDetail = {
@@ -26,14 +28,23 @@ export default function Listings() {
     endTime: 1677715200000,
     progress: 0
   }
+  const [submitSettingOpen, setSubmitSettingOpen] = useState<boolean>(true);
   return (
     <>
-      <TitleCard title="Live Listings" />
+      <TitleCard title="Live Listings Panel" />
+      {submitSettingOpen ? ( 
+      <Grid templateColumns='repeat(3, 1fr)' gap={1} paddingY="4">
+        <GridItem colSpan={1}><ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} /></GridItem>
+        <GridItem colSpan={2}><SettingBlank title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} /></GridItem> 
+      </Grid>
+      
+    ):(
       <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY="4">
         <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
         <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} />
         <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} />
       </Grid>
+    )}
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { Box, Flex, Text, Image, VStack, Progress, Button, Icon } from '@chakra-ui/react';
 import { useColor } from '../hooks';
-import Arrow from '../assets/img/icons/arrow-down.svg'
+import setting from '../assets/img/icons/setting.svg'
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
 import { ListingDetail } from '../types/listing';
 import { shortMonthNames } from '../utils/const';
@@ -28,7 +28,9 @@ export default function ListCard({ title, subtitle, listing }: Props) {
       borderColor={color.cardBorder}
       borderRadius='20px'
       flexDirection='column'
+      position='relative'
     >
+      <Image position='absolute' top='36px' right='45px' src={setting} ></Image>
       <Box width='100%' margin='10px'>
         <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
         <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>

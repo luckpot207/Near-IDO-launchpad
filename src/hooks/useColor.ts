@@ -19,6 +19,7 @@ interface ColorHookResult {
   fadeText: string
   black: string
   main: string
+  panelbg: string
 }
 
 export const useColor = (): ColorHookResult => {
@@ -37,6 +38,7 @@ export const useColor = (): ColorHookResult => {
   const fadeText = useColorModeValue('rock.400', 'white')
   const black = useColorModeValue('black', 'white')
   const main = useColorModeValue('brand.500', 'white')
+  const panelbg = useColorModeValue('brand.100', 'black')
 
   return {
     changeMode,
@@ -54,5 +56,7 @@ export const useColor = (): ColorHookResult => {
     fadeText,
     black,
     main,
+  panelbg
+
   };
 };
