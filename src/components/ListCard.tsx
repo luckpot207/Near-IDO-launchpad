@@ -9,9 +9,10 @@ interface Props {
   title: string
   subtitle: string
   listing: ListingDetail
+  handleClick: Function
 }
 
-export default function ListCard({ title, subtitle, listing }: Props) {
+export default function ListCard({ title, subtitle, listing, handleClick }: Props) {
   const color = useColor();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
@@ -65,32 +66,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
         <Flex >
           <Icon as={ArrowDownIcon} boxSize={8} color={color.black} />
         </Flex>
-        <Flex
-          minWidth='100%'
-          minHeight='14'
-          paddingY='4'
-          paddingX='4'
-          alignItems='center'
-          border='1px solid'
-          borderColor='rock.100'
-          borderRadius='10px'
-          bgColor='rock.50'
-          margin='10px'
-        >
-          <Box width='100%' margin='5px'>
-            <Text as='h1' fontSize='14px' textAlign='start'>Tokens Left</Text>
-            <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.toToken.supply.toLocaleString()}</Text>
-          </Box>
-          <Flex width='100%' justifyContent='end' flexDirection='column'>
-            <Flex margin='5px' justifyContent='end'>
-              <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.toToken.name}</Text>
-            </Flex >
-            <Flex justifyContent='end' margin='5px'>
-              <Image src={listing.toToken.icon} />
-              <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.toToken.symbol}</Text>
-            </Flex>
-          </Flex>
-        </Flex>
+
         <Flex
           minWidth='100%'
           minHeight='14'
@@ -111,7 +87,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
           minHeight='14'
           justifyContent='center'
         >
-          <Button width='100%' color={color.main}>Details</Button>
+          <Button width='100%' color={color.main} onClick={() => handleClick(true)}>Details</Button>
         </Flex>
       </VStack>
     </Flex>
