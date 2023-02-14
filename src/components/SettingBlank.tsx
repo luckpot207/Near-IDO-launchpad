@@ -247,20 +247,20 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                         <Image src={liveListingStar} padding='28px' opacity='10%'></Image>
                         <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
                             <Text
-                                font-family='DM Sans'
-                                font-style='normal'
-                                font-weight='700'
-                                font-size='40px'
-                                line-height='52px'
-                                text-align='center'
+                                fontFamily='DM Sans'
+                                fontStyle='normal'
+                                fontWeight='700'
+                                fontSize='40px'
+                                lineHeight='52px'
+                                textAlign='center'
                                 color='#cda900'
                             >LOGO</Text>
                             <Text
-                                font-family='DM Sans'
-                                font-style='normal'
-                                font-weight='500'
-                                font-size='16px'
-                                text-align='center'
+                                fontFamily='DM Sans'
+                                fontStyle='normal'
+                                fontWeight='500'
+                                fontSize='16px'
+                                textAlign='center'
                                 marginTop='1rem'
                                 color='#cda900'
                             >DRAG & DROP LOGO</Text>
