@@ -41,11 +41,11 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                 position='absolute'
                 top='34'
                 right='42'
-                color='white'
-                font-family='DM Sans'
-                font-style='normal'
-                font-weight='500'
-                font-size='16px'
+                color={color.background}
+                fontFamily='DM Sans'
+                fontStyle='normal'
+                fontWeight='500'
+                fontSize='16px'
                 _hover={{ bg: '#a3a3a3' }}
                 onClick={() => setEditDetail(false)}
             >
@@ -55,11 +55,11 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     <Button
                         bgGradient='linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)'
                         variant='solid'
-                        color='white'
-                        font-family='DM Sans'
-                        font-style='normal'
-                        font-weight='500'
-                        font-size='16px'
+                        color={color.background}
+                        fontFamily='DM Sans'
+                        fontStyle='normal'
+                        fontWeight='500'
+                        fontSize='16px'
                         onClick={() => setEditDetail(true)}
                         _hover={{ bg: '#a3a3a3' }}
                     >
@@ -68,11 +68,11 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     <Button
                         bgGradient='linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)'
                         variant='solid'
-                        color='white'
-                        font-family='DM Sans'
-                        font-style='normal'
-                        font-weight='500'
-                        font-size='16px'
+                        color={color.background}
+                        fontFamily='DM Sans'
+                        fontStyle='normal'
+                        fontWeight='500'
+                        fontSize='16px'
                         marginLeft='10px'
                         _hover={{ bg: '#a3a3a3' }}
                         onClick={() => setEditDetail(true)}
@@ -99,7 +99,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                             maxHeight='30px'
                             borderRadius='12px'
                             placeholder='STARLUX'
-                            bgColor='white'
+                            bgColor={color.background}
                             shadow='lg'
                             fontSize='14px'
                             paddingY='8px'
@@ -108,13 +108,13 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                         ></Input>
                     </Flex>
                     <Flex flexDirection='column' marginBottom='13px'>
-                        <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px'>SUB TITLE*</Text>
+                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px'>SUB TITLE*</Text>
                         <Input
                             minWidth='100%'
                             maxHeight='30px'
                             borderRadius='12px'
                             placeholder='1% IDO OFFERINGS'
-                            bgColor='white'
+                            bgColor={color.background}
                             fontSize='14px'
                             disabled={editDetail}
                         ></Input>
@@ -122,25 +122,25 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     {/* Group 1 */}
                     <Flex marginBottom='13px'>
                         <Flex flexDirection='column' marginRight='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >IDO RECEIVABLE*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >IDO RECEIVABLE*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='USDT.E'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
                         </Flex>
                         <Flex flexDirection='column' marginLeft='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >TOKEN TICKER*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >TOKEN TICKER*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='$STAR'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
@@ -149,25 +149,25 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     {/* Group 2 */}
                     <Flex marginBottom='13px'>
                         <Flex flexDirection='column' marginRight='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >STATUS*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >STATUS*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='PAID'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
                         </Flex>
                         <Flex flexDirection='column' marginLeft='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >TOKEN PRICE(USD)*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >TOKEN PRICE(USD)*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='0.25'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
@@ -176,25 +176,25 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     {/* Group 3 */}
                     <Flex marginBottom='13px'>
                         <Flex flexDirection='column' marginRight='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >START DATE & TIME*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >START DATE & TIME*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='8 FEB 2023, 00:00'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
                         </Flex>
                         <Flex flexDirection='column' marginLeft='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >END DATE & TIME*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >END DATE & TIME*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='14 FEB 2023, 23:59'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
@@ -203,25 +203,25 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     {/* Group 4 */}
                     <Flex marginBottom='13px'>
                         <Flex flexDirection='column' marginRight='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >DEOPSIT START DATE & TIME*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >DEOPSIT START DATE & TIME*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='1 FEB 2023, 00:00'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
                         </Flex>
                         <Flex flexDirection='column' marginLeft='12px'>
-                            <Text fontSize='12px' textAlign='left' color='black' paddingBottom='4px' >DEPOSIT END DATE & TIME*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.background} paddingBottom='4px' >DEPOSIT END DATE & TIME*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
                                 borderRadius='12px'
                                 placeholder='7 FEB 2023, 23:59'
-                                bgColor='white'
+                                bgColor={color.background}
                                 fontSize='14px'
                                 disabled={editDetail}
                             ></Input>
@@ -238,12 +238,12 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                 alignItems='center'
             >
                 {editDetail ? (
-                    <Box maxWidth='90%' bgColor='white' position='relative'>
+                    <Box maxWidth='90%' bgColor={color.background} position='relative'>
                         <Image src={liveListingStar} padding='28px'></Image>
                     </Box>
 
                 ) : (
-                    <Box maxWidth='90%' bgColor='white' position='relative'>
+                    <Box maxWidth='90%' bgColor={color.background} position='relative'>
                         <Image src={liveListingStar} padding='28px' opacity='10%'></Image>
                         <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
                             <Text
@@ -253,7 +253,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                                 fontSize='40px'
                                 lineHeight='52px'
                                 textAlign='center'
-                                color='#cda900'
+                                color={color.yellow}
                             >LOGO</Text>
                             <Text
                                 fontFamily='DM Sans'
@@ -262,7 +262,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                                 fontSize='16px'
                                 textAlign='center'
                                 marginTop='1rem'
-                                color='#cda900'
+                                color={color.yellow}
                             >DRAG & DROP LOGO</Text>
                         </Flex>
                     </Box>)}
