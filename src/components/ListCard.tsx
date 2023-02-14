@@ -1,6 +1,7 @@
 import { Box, Flex, Text, Image, VStack, Progress, Button, Icon } from '@chakra-ui/react';
 import { useColor } from '../hooks';
 import setting from '../assets/img/icons/setting.svg'
+import settingOff from '../assets/img/icons/settingOff.svg'
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
 import { ListingDetail } from '../types/listing';
 import { shortMonthNames } from '../utils/const';
@@ -11,9 +12,10 @@ interface Props {
   listing: ListingDetail
   handleSetting: Function
   handleDetail: Function
+  btnStatus: boolean
 }
 
-export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail }: Props) {
+export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail, btnStatus}: Props) {
   const color = useColor();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
@@ -32,7 +34,9 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
       flexDirection='column'
       position='relative'
     >
-      <Image position='absolute' top='36px' right='45px' src={setting} onClick={() => handleSetting(true)}></Image>
+      <Button position='absolute' top='30px' right='45px' onClick={() => handleSetting(true)} bg='transparent' padding='0'>
+        {btnStatus ? (<Image  src={settingOff} ></Image>):(<Image  src={setting} ></Image>)}
+      </Button>
       <Box width='100%' margin='10px'>
         <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
         <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>
