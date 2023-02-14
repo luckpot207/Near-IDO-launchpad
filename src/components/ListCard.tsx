@@ -9,10 +9,11 @@ interface Props {
   title: string
   subtitle: string
   listing: ListingDetail
-  handleClick: Function
+  handleSetting: Function
+  handleDetail: Function
 }
 
-export default function ListCard({ title, subtitle, listing, handleClick }: Props) {
+export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail }: Props) {
   const color = useColor();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
@@ -31,7 +32,7 @@ export default function ListCard({ title, subtitle, listing, handleClick }: Prop
       flexDirection='column'
       position='relative'
     >
-      <Image position='absolute' top='36px' right='45px' src={setting} ></Image>
+      <Image position='absolute' top='36px' right='45px' src={setting} onClick={() => handleSetting(true)}></Image>
       <Box width='100%' margin='10px'>
         <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
         <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>
@@ -87,7 +88,7 @@ export default function ListCard({ title, subtitle, listing, handleClick }: Prop
           minHeight='14'
           justifyContent='center'
         >
-          <Button width='100%' color={color.main} onClick={() => handleClick(true)}>Details</Button>
+          <Button width='100%' color={color.main} onClick={() => handleDetail(true)}>Details</Button>
         </Flex>
       </VStack>
     </Flex>

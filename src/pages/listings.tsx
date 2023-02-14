@@ -11,6 +11,7 @@ import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 
 export default function Listings() {
   const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [settingOpen, setSettingOpen] = useState<boolean>(false);
 
   const listing1: ListingDetail = {
     fromToken: token1,
@@ -33,24 +34,9 @@ export default function Listings() {
     endTime: 1677715200000,
     progress: 0
   }
-  const [submitSettingOpen, setSubmitSettingOpen] = useState<boolean>(true);
   return (
     <>
-      <TitleCard title="Live Listings Panel" />
-      {submitSettingOpen ? ( 
-      <Grid templateColumns='repeat(3, 1fr)' gap={1} paddingY="4">
-        <GridItem colSpan={1}><ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleClick={setDetailOpen}/></GridItem>
-        <GridItem colSpan={2}><SettingBlank title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} /></GridItem> 
-      </Grid>
-      
-    ):(
-      <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY="4">
-        <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleClick={setDetailOpen}/>
-        <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} handleClick={setDetailOpen}/>
-        <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} handleClick={setDetailOpen}/>
-      </Grid>
-    )}
-      <TitleCard title='Live Listings' />
+      <TitleCard title={settingOpen ? 'Live Listings Panel' : 'Live Listings'} />
       {detailOpen ? (
         <Grid gap={10} paddingY='4'>
           <Flex>
@@ -64,11 +50,31 @@ export default function Listings() {
           </Flex>
           <DetailCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
         </Grid>
+      ) : settingOpen ? (
+        <Flex gap={1} paddingY="4" flexDirection={'column'}>
+          <Flex>
+            <Button
+              variant='ghost'
+              colorScheme='purple'
+              leftIcon={<ArrowLeftIcon />}
+              onClick={() => setSettingOpen(false)}>
+              Back
+            </Button>
+          </Flex>
+          <Flex>
+            <GridItem colSpan={1}>
+              <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} />
+            </GridItem>
+            <GridItem colSpan={2}>
+              <SettingBlank title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
+            </GridItem>
+          </Flex>
+        </Flex>
       ) : (
         <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY='4'>
-          <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleClick={setDetailOpen} />
-          <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} handleClick={setDetailOpen} />
-          <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} handleClick={setDetailOpen} />
+          <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} />
+          <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} handleSetting={setSettingOpen} handleDetail={setDetailOpen} />
+          <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} handleSetting={setSettingOpen} handleDetail={setDetailOpen} />
         </Grid>
       )}
     </>
