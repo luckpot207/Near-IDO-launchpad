@@ -1,10 +1,15 @@
-import { Grid } from "@chakra-ui/react";
+import { useState, useEffect, useRef } from 'react';
+import { Grid, Flex, Text } from "@chakra-ui/react";
 import ListCard from "../components/ListCard";
 import TitleCard from "../components/TitleCard";
+import DetailCard from '../components/DetailCard';
 import { ListingDetail } from "../types/listing";
 import { token1, token2, token3, token4, token5 } from "../utils/tokens";
 
+
 export default function Listings() {
+  const [submitDetailsOpen, setSubmitOpen] = useState<boolean>(true);
+
   const listing1: ListingDetail = {
     fromToken: token1,
     toToken: token2,
@@ -29,11 +34,17 @@ export default function Listings() {
   return (
     <>
       <TitleCard title="Live Listings" />
-      <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY="4">
-        <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
-        <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} />
-        <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} />
-      </Grid>
+      {submitDetailsOpen ? (
+        <Grid gap={10} paddingY='4'>
+          <DetailCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1}/>
+        </Grid>
+      ) : (
+        <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY='4'>
+          <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
+          <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} />
+          <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} />
+        </Grid>
+      )}
     </>
   )
 }
