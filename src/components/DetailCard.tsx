@@ -1,7 +1,7 @@
 import { Box, Flex, Text, Image, VStack, HStack, Progress, Button, Icon, Spacer } from '@chakra-ui/react';
 import { useColor } from '../hooks';
 import Arrow from '../assets/img/icons/arrow-down.svg'
-import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
+import { BiRightArrowAlt as ArrowRightIcon, BiChevronDown as ArrowDownIcon } from 'react-icons/bi'
 import { ListingDetail } from '../types/listing';
 import { shortMonthNames } from '../utils/const';
 
@@ -39,9 +39,7 @@ export default function DetailCard({ title, subtitle, listing }: Props) {
         </Box>
         <HStack>
           <Text>Details</Text>
-          <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.51258 9.75L1.04904e-05 0L15.0251 0L7.51258 9.75Z" fill="#D9D9D9" />
-          </svg>
+          <Icon as={ArrowDownIcon} />
         </HStack>
       </HStack>
       <VStack width='100%' spacing='24px'>
@@ -260,6 +258,7 @@ export default function DetailCard({ title, subtitle, listing }: Props) {
           <Spacer />
           <Button marginBottom='10px' bgGradient='linear-gradient(360deg, #10B981 0%, #DEFFF4 122.97%)' onClick={() => (true)} color={'white'}>CONFIRM DEPOSIT</Button>
         </Flex>
+        <Icon as={ArrowRightIcon} />
         <Flex
           height='400px'
           flexDirection='column'
@@ -310,6 +309,7 @@ export default function DetailCard({ title, subtitle, listing }: Props) {
           <Spacer />
           <Button marginBottom='10px' bgGradient='linear-gradient(360deg, #993FF4 0%, #D5B5FF 122.97%)' onClick={() => (true)} color={'white'}>ACKNOWLEDGED</Button>
         </Flex>
+        <Icon as={ArrowRightIcon} />
         <Flex
           height='400px'
           flexDirection='column'
@@ -318,7 +318,7 @@ export default function DetailCard({ title, subtitle, listing }: Props) {
             DISDTRIBUTION
           </Text>
           <Spacer />
-          <VStack spacing='24px'  padding='0 30px 0 30px'>
+          <VStack spacing='24px' padding='0 30px 0 30px'>
             <Flex minWidth='100%'>
               <Text as='h5' fontSize='10px' textAlign='start' width='50%'>
                 {shortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
