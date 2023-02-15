@@ -19,7 +19,7 @@ interface Props {
 export default function ListCard({ title, subtitle, listing }: Props) {
     const color = useColor();
     const [editDetail, setEditDetail] = useState<boolean>(true);
-    const fileUploadInputRef = useRef<HTMLImageElement | null>(null);
+    const fileUploadInputRef = useRef<HTMLInputElement | null>(null);
     const inputUpdateAvatarPhoto = useRef<HTMLInputElement>(null);
     const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
     const [imageUploadUri, setImageUploadUri] = useState<string>();
@@ -252,53 +252,53 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     <Box maxWidth='90%' bgColor={color.background} position='relative'>
                         <Image src={liveListingStar} padding='28px'></Image>
                     </Box>
-                    ) : (
-                        <Box maxWidth='90%' bgColor={color.background} position='relative' >
-                            <Image src={liveListingStar} padding='28px' opacity='10%' ></Image>
-                            <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
-                                <Input
-                                    fontFamily='DM Sans'
-                                    fontStyle='normal'
-                                    fontWeight='700'
-                                    fontSize='40px'
-                                    type='button'
-                                    //lineHeight='52px'
-                                    //textAlign='center'
-                                    variant='unstyled'
-                                    color={color.yellow}
-                                    value='LOGO'
-                                    cursor='pointer'
-                                    _hover={{ color: '#3200ff' }}
-                                    _active={{ color: '#ffffff' }}
-                                    onClick={() => { fileUploadInputRef.current?.click() }}
-                                    readOnly
-                                ></Input>
-                                <input type='file' name='image' onChange={(e) => {
-                                    if (!e.target.files) return;
-                                    setImageUpload(e.target.files.item(0))
+                ) : (
+                    <Box maxWidth='90%' bgColor={color.background} position='relative' >
+                        <Image src={liveListingStar} padding='28px' opacity='10%' ></Image>
+                        <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
+                            <Input
+                                fontFamily='DM Sans'
+                                fontStyle='normal'
+                                fontWeight='700'
+                                fontSize='40px'
+                                type='button'
+                                //lineHeight='52px'
+                                //textAlign='center'
+                                variant='unstyled'
+                                color={color.yellow}
+                                value='LOGO'
+                                cursor='pointer'
+                                _hover={{ color: '#3200ff' }}
+                                _active={{ color: '#ffffff' }}
+                                onClick={() => { fileUploadInputRef.current?.click() }}
+                                readOnly
+                            ></Input>
+                            <input type='file' name='image' onChange={(e) => {
+                                if (!e.target.files) return;
+                                setImageUpload(e.target.files.item(0))
 
-                                    const reader = new FileReader();
-                                    reader.onload = () => {
-                                        if (!reader.result) return;
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                    if (!reader.result) return;
 
-                                        setImageUploadUri(reader.result.toString());
-                                        setIsCropped(false);
-                                    };
-                                    reader.readAsDataURL(e.target.files?.item(0) as Blob);
-                                    setImageUploadBlob(e.target.files?.item(0) as Blob)
-                                }} accept={NftImageType} style={{ display: 'none' }} ref={fileUploadInputRef} />
-                                <Text
-                                    fontFamily='DM Sans'
-                                    fontStyle='normal'
-                                    fontWeight='500'
-                                    fontSize='16px'
-                                    textAlign='center'
-                                    marginTop='1rem'
-                                    color={color.yellow}
-                                >DRAG & DROP LOGO</Text>
-                            </Flex>
-                        </Box>
-                    )
+                                    setImageUploadUri(reader.result.toString());
+                                    setIsCropped(false);
+                                };
+                                reader.readAsDataURL(e.target.files?.item(0) as Blob);
+                                setImageUploadBlob(e.target.files?.item(0) as Blob)
+                            }} accept={NftImageType} style={{ display: 'none' }} ref={fileUploadInputRef} />
+                            <Text
+                                fontFamily='DM Sans'
+                                fontStyle='normal'
+                                fontWeight='500'
+                                fontSize='16px'
+                                textAlign='center'
+                                marginTop='1rem'
+                                color={color.yellow}
+                            >DRAG & DROP LOGO</Text>
+                        </Flex>
+                    </Box>
+                )
                 }
             </Flex>
         </Flex>
