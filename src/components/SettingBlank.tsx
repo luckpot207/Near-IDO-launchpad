@@ -1,10 +1,12 @@
 import { Flex, Text, Input, Image, Box, Button } from '@chakra-ui/react';
 import { useColor } from '../hooks';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import liveListingStar from '../assets/img/icons/live-listing.svg'
+import { BiCrop as CropIcon, BiChevronLeft as ArrowLeftIcon, BiChevronRight as ArrowRightIcon } from 'react-icons/bi';
+import Cropper from 'react-cropper';
 //import Arrow from '../assets/img/icons/arrow-down.svg'
 //import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
-import { ListingDetail } from '../types/listing';
+import { ListingDetail, NftImageType } from '../types';
 //import { shortMonthNames } from '../utils/const';
 
 interface Props {
@@ -17,6 +19,15 @@ interface Props {
 export default function ListCard({ title, subtitle, listing }: Props) {
     const color = useColor();
     const [editDetail, setEditDetail] = useState<boolean>(true);
+    const fileUploadInputRef = useRef<HTMLImageElement | null>(null);
+    const inputUpdateAvatarPhoto = useRef<HTMLInputElement>(null);
+    const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
+    const [imageUploadUri, setImageUploadUri] = useState<string>();
+    const [imageUploadBlob, setImageUploadBlob] = useState<Blob | null>(new Blob());
+    const [cropperInstance, setCropperInstance] = useState<Cropper>();
+    const [isCropped, setIsCropped] = useState<boolean>(false);
+
+
     const startTime = new Date(listing.startTime);
     const endTime = new Date(listing.endTime);
     const remainTime = new Date(listing.endTime - Date.now() * 1000)
@@ -93,7 +104,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     marginRight='20px'
                 >
                     <Flex flexDirection='column' marginBottom='17px'>
-                        <Text fontSize='12px' paddingBottom='4px' textAlign='left' color='black'>PROJECT NAME*</Text>
+                        <Text fontSize='12px' paddingBottom='4px' textAlign='left' color={color.black}>PROJECT NAME*</Text>
                         <Input
                             minWidth='100%'
                             maxHeight='30px'
@@ -215,7 +226,7 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                             ></Input>
                         </Flex>
                         <Flex flexDirection='column' marginLeft='12px'>
-                            <Text fontSize='12px' textAlign='left' color={color.background} paddingBottom='4px' >DEPOSIT END DATE & TIME*</Text>
+                            <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >DEPOSIT END DATE & TIME*</Text>
                             <Input
                                 minWidth='100%'
                                 maxHeight='30px'
@@ -241,31 +252,54 @@ export default function ListCard({ title, subtitle, listing }: Props) {
                     <Box maxWidth='90%' bgColor={color.background} position='relative'>
                         <Image src={liveListingStar} padding='28px'></Image>
                     </Box>
+                    ) : (
+                        <Box maxWidth='90%' bgColor={color.background} position='relative' >
+                            <Image src={liveListingStar} padding='28px' opacity='10%' ></Image>
+                            <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
+                                <Input
+                                    fontFamily='DM Sans'
+                                    fontStyle='normal'
+                                    fontWeight='700'
+                                    fontSize='40px'
+                                    type='button'
+                                    //lineHeight='52px'
+                                    //textAlign='center'
+                                    variant='unstyled'
+                                    color={color.yellow}
+                                    value='LOGO'
+                                    cursor='pointer'
+                                    _hover={{ color: '#3200ff' }}
+                                    _active={{ color: '#ffffff' }}
+                                    onClick={() => { fileUploadInputRef.current?.click() }}
+                                    readOnly
+                                ></Input>
+                                <input type='file' name='image' onChange={(e) => {
+                                    if (!e.target.files) return;
+                                    setImageUpload(e.target.files.item(0))
 
-                ) : (
-                    <Box maxWidth='90%' bgColor={color.background} position='relative'>
-                        <Image src={liveListingStar} padding='28px' opacity='10%'></Image>
-                        <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
-                            <Text
-                                fontFamily='DM Sans'
-                                fontStyle='normal'
-                                fontWeight='700'
-                                fontSize='40px'
-                                lineHeight='52px'
-                                textAlign='center'
-                                color={color.yellow}
-                            >LOGO</Text>
-                            <Text
-                                fontFamily='DM Sans'
-                                fontStyle='normal'
-                                fontWeight='500'
-                                fontSize='16px'
-                                textAlign='center'
-                                marginTop='1rem'
-                                color={color.yellow}
-                            >DRAG & DROP LOGO</Text>
-                        </Flex>
-                    </Box>)}
+                                    const reader = new FileReader();
+                                    reader.onload = () => {
+                                        if (!reader.result) return;
+
+                                        setImageUploadUri(reader.result.toString());
+                                        setIsCropped(false);
+                                    };
+                                    reader.readAsDataURL(e.target.files?.item(0) as Blob);
+                                    setImageUploadBlob(e.target.files?.item(0) as Blob)
+                                }} accept={NftImageType} style={{ display: 'none' }} ref={fileUploadInputRef} />
+                                <Text
+                                    fontFamily='DM Sans'
+                                    fontStyle='normal'
+                                    fontWeight='500'
+                                    fontSize='16px'
+                                    textAlign='center'
+                                    marginTop='1rem'
+                                    color={color.yellow}
+                                >DRAG & DROP LOGO</Text>
+                            </Flex>
+                        </Box>
+                    )
+                }
             </Flex>
         </Flex>
     )
