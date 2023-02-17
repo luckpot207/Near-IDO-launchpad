@@ -20,6 +20,10 @@ const NAV_LINKS = [
     url: "/"
   },
   {
+    name: "Register",
+    url: "/create"
+  },
+  {
     name: "Treasury",
     url: "/treasury"
   },

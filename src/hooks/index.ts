@@ -1,2 +1,2 @@
-export * from './useColor'
+export * from './color'
 export * from './Near'

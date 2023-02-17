@@ -9,12 +9,14 @@ import { MultiWalletConnection } from "./types";
 import { useSearchParams } from "react-router-dom";
 import { nearConfig } from "./environment";
 import { refreshWalletConnection } from "./walletSelector";
+import { PegasusContract } from "./classWrappers";
 
 export interface INearContext {
     near: Near;
     config: NearAppConfig;
     walletConnection: MultiWalletConnection;
     keyStore: any;
+    pegasusContract: PegasusContract
     selector: WalletSelector;
     modal: WalletSelectorModal;
     wallet: SelectorAccount;
