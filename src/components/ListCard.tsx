@@ -1,7 +1,9 @@
 import { Box, Flex, Text, Image, VStack, Progress, Button, Icon } from '@chakra-ui/react';
 import { useColor } from '../hooks';
+import { useState } from 'react';
 import setting from '../assets/img/icons/setting.svg'
 import settingOff from '../assets/img/icons/settingOff.svg'
+import wallet from '../assets/img/icons/wallet.svg'
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
 import { ListingDetail } from '../types/listing';
 import { shortMonthNames } from '../utils/const';
@@ -20,6 +22,14 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
   const remainTime = new Date(listing.endTime - Date.now() * 1000)
+  const [accountType, setAccountType] = useState<Boolean>(true);
+  let imageUrl = setting;
+  if(accountType) 
+    {imageUrl = wallet;} 
+  else {
+      if(btnStatus) {imageUrl = settingOff;}
+  }
+
   return (
     <Flex
       minHeight='14'
@@ -35,7 +45,7 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
       position='relative'
     >
       <Button position='absolute' top='30px' right='45px' onClick={() => handleSetting(true)} bg='transparent' padding='0'>
-        {btnStatus ? (<Image  src={settingOff} ></Image>):(<Image  src={setting} ></Image>)}
+        <Image src={imageUrl} ></Image>
       </Button>
       <Box width='100%' margin='10px'>
         <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
@@ -65,6 +75,32 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
             <Flex justifyContent='end' margin='5px'>
               <Image src={listing.fromToken.icon} />
               <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.fromToken.symbol}</Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex
+          minWidth='100%'
+          minHeight='14'
+          paddingY='4'
+          paddingX='4'
+          alignItems='center'
+          border='1px solid'
+          borderColor='rock.100'
+          borderRadius='10px'
+          bgColor='rock.50'
+          margin='10 0px'
+        >
+          <Box width='100%'>
+            <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
+            <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.fromToken.supply.toLocaleString()}</Text>
+          </Box>
+          <Flex width='100%' justifyContent='end' flexDirection='column'>
+            <Flex margin='5px' justifyContent='end'>
+              <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.toToken.name}</Text>
+            </Flex >
+            <Flex justifyContent='end' margin='5px'>
+              <Image src={listing.toToken.icon} />
+              <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.toToken.symbol}</Text>
             </Flex>
           </Flex>
         </Flex>

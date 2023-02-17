@@ -22,6 +22,8 @@ interface ColorHookResult {
   panelbg: string
   progressStatus: string
   yellow: string
+  green: string
+  blue: string
 }
 
 export const useColor = (): ColorHookResult => {
@@ -38,11 +40,14 @@ export const useColor = (): ColorHookResult => {
   const contact = useColorModeValue('#10B981', '#90B989')
   const cardBorder = useColorModeValue('brand.500', 'white')
   const fadeText = useColorModeValue('rock.400', 'white')
-  const black = useColorModeValue('black', 'white')
+  const black = useColorModeValue('black', 'rock.900')
   const main = useColorModeValue('brand.500', 'white')
   const panelbg = useColorModeValue('brand.100', 'black')
   const progressStatus = useColorModeValue('rock.500', 'gray.100')
   const yellow = useColorModeValue('#cda900','#3286ff')
+  const green = useColorModeValue('#26a17b','#d94e82')
+  const blue = useColorModeValue('#2079FF', '#df8600')
+
 
   return {
     changeMode,
@@ -63,5 +68,7 @@ export const useColor = (): ColorHookResult => {
     panelbg,
     progressStatus,
     yellow,
+    green,
+    blue
   };
 };

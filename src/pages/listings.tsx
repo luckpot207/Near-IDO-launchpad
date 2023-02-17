@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import ListCard from '../components/ListCard';
 import TitleCard from '../components/TitleCard';
 import DetailCard from '../components/DetailCard';
+import Deposit from '../components/Deposit';
 import { ListingDetail } from '../types/listing';
 import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 
@@ -48,7 +49,7 @@ export default function Listings() {
               Back
             </Button>
           </Flex>
-          <DetailCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
+          <Deposit title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
         </Grid>
       ) : settingOpen ? (
         <Flex gap={1} paddingY="4" flexDirection={'column'}>

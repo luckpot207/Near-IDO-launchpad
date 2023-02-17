@@ -1,7 +1,7 @@
 import { Flex, Text, Input, Image, Box, Button } from '@chakra-ui/react';
 import { useColor } from '../hooks';
-import { useState, useRef, useEffect } from 'react';
-import liveListingStar from '../assets/img/icons/live-listing.svg'
+import { useState, useRef } from 'react';
+import liveListingStar from '../assets/img/icons/live-listing-star.svg'
 import { BiCrop as CropIcon, BiChevronLeft as ArrowLeftIcon, BiChevronRight as ArrowRightIcon } from 'react-icons/bi';
 import Cropper from 'react-cropper';
 //import Arrow from '../assets/img/icons/arrow-down.svg'
