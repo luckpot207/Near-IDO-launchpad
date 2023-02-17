@@ -5,6 +5,27 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.4.9",
+    "@near-wallet-selector/coin98-wallet": "^7.8.0",
+    "@near-wallet-selector/core": "^7.8.0",
+    "@near-wallet-selector/default-wallets": "^7.8.0",
+    "@near-wallet-selector/finer-wallet": "^7.8.0",
+    "@near-wallet-selector/here-wallet": "^7.8.0",
+    "@near-wallet-selector/ledger": "^7.8.0",
+    "@near-wallet-selector/math-wallet": "^7.8.0",
+    "@near-wallet-selector/meteor-wallet": "^7.8.0",
+    "@near-wallet-selector/modal-ui": "^7.8.0",
+    "@near-wallet-selector/my-near-wallet": "^7.8.0",
+    "@near-wallet-selector/narwallets": "^7.8.0",
+    "@near-wallet-selector/near-wallet": "^7.8.0",
+    "@near-wallet-selector/nearfi": "^7.8.0",
+    "@near-wallet-selector/neth": "^7.8.0",
+    "@near-wallet-selector/nightly": "^7.8.0",
+    "@near-wallet-selector/nightly-connect": "^7.8.0",
+    "@near-wallet-selector/opto-wallet": "^7.8.0",
+    "@near-wallet-selector/sender": "^7.8.0",
+    "@near-wallet-selector/wallet-connect": "^7.8.0",
+    "@near-wallet-selector/welldone-wallet": "^7.8.0",
+    "@near-wallet-selector/xdefi": "^7.8.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,8 +34,12 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "big.js": "^6.2.1",
+    "bn.js": "^5.2.1",
+    "bs58": "^5.0.0",
     "near-api-js": "^1.1.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
     "react-cropper": "^2.1.8",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
@@ -24,9 +49,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,5 +71,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.1",
+    "@types/bs58": "^4.0.1"
   }
 }

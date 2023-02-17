@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Image, VStack, Progress, Button, Icon } from '@chakra-ui/react';
+import { Box, Flex, Text, Image, VStack, Progress, Button, Icon, HStack } from '@chakra-ui/react';
 import { useColor } from '../hooks';
 import { useState } from 'react';
 import setting from '../assets/img/icons/setting.svg'
@@ -17,18 +17,16 @@ interface Props {
   btnStatus: boolean
 }
 
-export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail, btnStatus}: Props) {
+export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail, btnStatus }: Props) {
   const color = useColor();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
   const remainTime = new Date(listing.endTime - Date.now() * 1000)
   const [accountType, setAccountType] = useState<Boolean>(true);
-  let imageUrl = setting;
-  if(accountType) 
-    {imageUrl = wallet;} 
-  else {
-      if(btnStatus) {imageUrl = settingOff;}
-  }
+  let imageUrl = accountType ? setting : wallet;
+
+  if (btnStatus) { imageUrl = settingOff; }
+
 
   return (
     <Flex
@@ -44,13 +42,17 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
       flexDirection='column'
       position='relative'
     >
-      <Button position='absolute' top='30px' right='45px' onClick={() => handleSetting(true)} bg='transparent' padding='0'>
-        <Image src={imageUrl} ></Image>
-      </Button>
-      <Box width='100%' margin='10px'>
-        <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
-        <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>
-      </Box>
+      <HStack justifyContent={'space-between'} width={'100%'} marginY={4}>
+        <Flex flexDirection='column' justifyContent={'flex-start'}>
+          <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
+          <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>
+        </Flex>
+        <Flex justifyContent={'flex-end'}>
+          <Button onClick={() => handleSetting(true)} bg='transparent' padding={0}>
+            <Image src={imageUrl} />
+          </Button>
+        </Flex>
+      </HStack>
       <VStack width='100%' spacing='24px'>
         <Flex
           minWidth='100%'

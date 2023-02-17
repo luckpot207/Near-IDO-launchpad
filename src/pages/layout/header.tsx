@@ -9,7 +9,9 @@ import {
   Button,
   Text
 } from "@chakra-ui/react"
+import { BiLogOut as LogoutIcon } from 'react-icons/bi'
 import { useColor } from "../../hooks";
+import { useNearLogin } from "../../hooks/Near";
 
 const NAV_LINKS = [
   {
@@ -37,6 +39,29 @@ const NAV_LINKS = [
 export default function Header() {
   const color = useColor();
   const { toggleColorMode } = useColorMode();
+  const { isLoggedInNear, accountIdNear, signInNear, signOutNear } = useNearLogin();
+
+  const handleConnectNear = () => {
+    console.log(">>>>>>>", isLoggedInNear)
+    if (isLoggedInNear) {
+      signOutNear();
+    } else {
+      signInNear();
+    }
+  };
+
+  const displayAccountId =
+    accountIdNear && accountIdNear.length > 20 ? `${accountIdNear.substring(0, 19)}...` : accountIdNear;
+
+  const connectWallet = (
+    <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
+      <Text size="sm" sx={{ pr: 1 }}>
+        {isLoggedInNear ? displayAccountId : "Connect Wallet"}
+      </Text>
+      {isLoggedInNear && <LogoutIcon />}
+    </Button>
+
+  );
 
   return (
     <Flex
@@ -77,9 +102,7 @@ export default function Header() {
           variant="solid"
           onClick={toggleColorMode}
         />
-        <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid'>
-          Connect Wallet
-        </Button>
+        {connectWallet}
       </Flex>
     </Flex >
   );

@@ -206,14 +206,14 @@ export default function Deposit({ title, subtitle, listing }: Props) {
                         minHeight='14'
                         justifyContent='center'
                     >
-                        <Button width='80%' color={color.main} onClick={() => handleDetail(true)}>DEPOSIT</Button>
+                        <Button width='80%' color={color.main} onClick={() => { }}>DEPOSIT</Button>
                     </Flex>
                     <Flex
                         minWidth='100%'
                         minHeight='14'
                         justifyContent='center'
                     >
-                        <Button width='80%' color={color.main} onClick={() => handleDetail(true)}>WITHDRAW</Button>
+                        <Button width='80%' color={color.main} onClick={() => { }}>WITHDRAW</Button>
                     </Flex>
                 </VStack>
                 <VStack

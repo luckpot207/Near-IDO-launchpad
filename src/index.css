@@ -12,15 +12,19 @@ code {
     monospace;
 }
 
+@import '@near-wallet-selector/modal-ui/styles.css';
+
 @import url("https://fonts.googleapis.com/css?family=DM+Sans");
 
 ::-webkit-scrollbar {
   width: 5px;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #391b56;
   border-radius: 8px;
 }
+
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px #391b56;
   border-radius: 10px;

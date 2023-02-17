@@ -5,17 +5,27 @@ import theme from './theme';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { InitNearContext, NearContext } from "./hooks/Near";
+
+const InitContext = async () => {
+  const nearContext = await InitNearContext();
+  return nearContext;
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-root.render(
-  <React.StrictMode>
-    <ChakraProvider theme={theme} >
-      <App />
-    </ChakraProvider>
-  </React.StrictMode>
-);
+InitNearContext().then((nearContext) => {
+  root.render(
+    <React.StrictMode>
+      <ChakraProvider theme={theme} >
+        <NearContext.Provider value={nearContext}>
+          <App />
+        </NearContext.Provider>
+      </ChakraProvider>
+    </React.StrictMode>
+  )
+});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

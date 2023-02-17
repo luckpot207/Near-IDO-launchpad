@@ -40,3 +40,11 @@ function App() {
 }
 
 export default App;
+function useState(arg0: boolean): [any, any] {
+  throw new Error("Function not implemented.");
+}
+
+function useNear() {
+  throw new Error("Function not implemented.");
+}
+
