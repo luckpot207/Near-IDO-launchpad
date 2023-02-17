@@ -7,11 +7,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { InitNearContext, NearContext } from "./hooks/Near";
 
-const InitContext = async () => {
-  const nearContext = await InitNearContext();
-  return nearContext;
-}
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

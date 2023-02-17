@@ -18,6 +18,7 @@ export interface INearContext {
     selector: WalletSelector;
     modal: WalletSelectorModal;
     wallet: SelectorAccount;
+    role: string
 }
 
 export const NearContext = createContext<INearContext | null>(null);

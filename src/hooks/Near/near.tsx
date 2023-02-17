@@ -29,5 +29,6 @@ export async function InitNearContext(): Promise<INearContext> {
         selector: walletSelector.selector,
         modal: walletSelector.modal,
         wallet: walletSelector.wallet,
+        role: "user"
     };
 }

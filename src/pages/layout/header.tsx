@@ -10,6 +10,7 @@ import {
   Text
 } from "@chakra-ui/react"
 import { BiLogOut as LogoutIcon } from 'react-icons/bi'
+import Dropdown from 'react-bootstrap/Dropdown';
 import { useColor } from "../../hooks";
 import { useNearLogin } from "../../hooks/Near";
 
@@ -27,10 +28,6 @@ const NAV_LINKS = [
     url: "/account"
   },
   {
-    name: "Create",
-    url: "/create"
-  },
-  {
     name: "Swap",
     url: "/swap"
   },
@@ -42,7 +39,6 @@ export default function Header() {
   const { isLoggedInNear, accountIdNear, signInNear, signOutNear } = useNearLogin();
 
   const handleConnectNear = () => {
-    console.log(">>>>>>>", isLoggedInNear)
     if (isLoggedInNear) {
       signOutNear();
     } else {

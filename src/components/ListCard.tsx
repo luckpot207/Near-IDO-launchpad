@@ -1,10 +1,11 @@
-import { Box, Flex, Text, Image, VStack, Progress, Button, Icon, HStack } from '@chakra-ui/react';
-import { useColor } from '../hooks';
 import { useState } from 'react';
-import setting from '../assets/img/icons/setting.svg'
-import settingOff from '../assets/img/icons/settingOff.svg'
-import wallet from '../assets/img/icons/wallet.svg'
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
+import { Box, Flex, Text, Image, VStack, Progress, Button, Icon, HStack, IconButton } from '@chakra-ui/react';
+import { useNearContext } from '../hooks'
+import { useColor } from '../hooks';
+import SettingLightIcon from '../assets/img/icons/setting.svg'
+import SettingDarkIcon from '../assets/img/icons/settingOff.svg'
+import WalletIcon from '../assets/img/icons/wallet.svg'
 import { ListingDetail } from '../types/listing';
 import { shortMonthNames } from '../utils/const';
 
@@ -18,14 +19,18 @@ interface Props {
 }
 
 export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail, btnStatus }: Props) {
+  const { role } = useNearContext();
   const color = useColor();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
   const remainTime = new Date(listing.endTime - Date.now() * 1000)
   const [accountType, setAccountType] = useState<Boolean>(true);
-  let imageUrl = accountType ? setting : wallet;
+  let icon = role === 'user' ? SettingLightIcon : WalletIcon;
+  if (btnStatus) { icon = SettingDarkIcon }
 
-  if (btnStatus) { imageUrl = settingOff; }
+  const handleWalletClick = () => {
+    role === 'user' ? handleDetail(true) : handleSetting(true)
+  }
 
 
   return (
@@ -48,8 +53,8 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
           <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>
         </Flex>
         <Flex justifyContent={'flex-end'}>
-          <Button onClick={() => handleSetting(true)} bg='transparent' padding={0}>
-            <Image src={imageUrl} />
+          <Button onClick={handleWalletClick} bg='transparent' padding={0}>
+            <Image src={icon} />
           </Button>
         </Flex>
       </HStack>

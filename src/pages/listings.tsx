@@ -4,8 +4,8 @@ import { token1, token2, token3, token4, token5 } from "../utils/tokens";
 import { useState, useEffect, useRef } from 'react';
 import ListCard from '../components/ListCard';
 import TitleCard from '../components/TitleCard';
+// import DetailCard from '../components/DetailCard';
 import DetailCard from '../components/DetailCard';
-import Deposit from '../components/Deposit';
 import { ListingDetail } from '../types/listing';
 import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 
@@ -49,7 +49,7 @@ export default function Listings() {
               Back
             </Button>
           </Flex>
-          <Deposit title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
+          <DetailCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
         </Grid>
       ) : settingOpen ? (
         <Flex gap={1} paddingY="4" flexDirection={'column'}>
@@ -64,7 +64,7 @@ export default function Listings() {
           </Flex>
           <Grid templateColumns='repeat(3, 1fr)' gap={6}>
             <GridItem colSpan={1}>
-              <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen}/>
+              <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
             </GridItem>
             <GridItem colSpan={2}>
               <SettingBlank title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
@@ -73,9 +73,9 @@ export default function Listings() {
         </Flex>
       ) : (
         <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY='4'>
-          <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen}/>
-          <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen}/>
-          <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen}/>
+          <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
+          <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
+          <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
         </Grid>
       )}
     </>
