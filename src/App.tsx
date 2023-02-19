@@ -26,9 +26,10 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Listings />} />
+            <Route path="/create" element={<Create />} />
             <Route path="/treasury" element={<Treasury />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/create" element={<Create />} />
+            <Route path="/project" element={<Create />} />
             <Route path="/swap" element={<Swap />} />
             <Route path="*" element={<NoPage />} />
           </Routes>
