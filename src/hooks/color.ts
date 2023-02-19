@@ -24,6 +24,8 @@ interface ColorHookResult {
   yellow: string
   green: string
   blue: string
+  lightBlue: string
+  lightGreen: string
 }
 
 export const useColor = (): ColorHookResult => {
@@ -47,6 +49,8 @@ export const useColor = (): ColorHookResult => {
   const yellow = useColorModeValue('#cda900','#3286ff')
   const green = useColorModeValue('#26a17b','#d94e82')
   const blue = useColorModeValue('#2079FF', '#df8600')
+  const lightBlue = useColorModeValue('#76deff', '#892100')
+  const lightGreen = useColorModeValue('#34d399', '#cb2c00');
 
 
   return {
@@ -69,6 +73,8 @@ export const useColor = (): ColorHookResult => {
     progressStatus,
     yellow,
     green,
-    blue
+    blue,
+    lightBlue,
+    lightGreen
   };
 };
