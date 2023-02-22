@@ -132,14 +132,14 @@ export class PegasusContract {
     const ftContract = new FtContract(this.initFtContract(ft_contract_id));
     const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
     const metadata = await ftContract!.getFtMetadata();
-    const projectRegisterValue = BigInt(20 * (10 ** metadata.decimals))
+    const projectRegisterValue = BigInt(amount * (10 ** metadata.decimals))
     const attachDeposit = (projectRegisterValue)
 
     const msg = JSON.stringify({
       msg_type: false,
-      msg_data: {
+      msg_data: JSON.stringify({
         project_id,
-      }
+      })
     });
 
     if (BigNumber(balance) > BigNumber(0)) {
@@ -173,9 +173,9 @@ export class PegasusContract {
 
     const msg = JSON.stringify({
       msg_type: false,
-      msg_data: {
+      msg_data: JSON.stringify({
         project_id,
-      }
+      })
     });
 
     if (BigNumber(balance) > BigNumber(0)) {
