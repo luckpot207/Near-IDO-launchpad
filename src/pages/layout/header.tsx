@@ -94,9 +94,11 @@ export default function Header() {
       <Spacer />
       <Flex gap="10" alignItems='center' justifyContent='center' >
         {NAV_LINKS.map((navLink, index) => (
-          <div key={index} >
+          <NavLink key={index} end to={navLink.url[0]} style={navData => ({
+            color: navData.isActive ? "#374151" : "#9CA3AF"
+          })} >
             <Menubar title={navLink.name} items={navLink.items} url={navLink.url}></Menubar>
-          </div>
+          </NavLink>
         ))}
       </Flex>
       <Spacer />
