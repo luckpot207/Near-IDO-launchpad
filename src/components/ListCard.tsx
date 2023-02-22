@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
 import { Box, Flex, Text, Image, VStack, Progress, Button, Icon, HStack, IconButton } from '@chakra-ui/react';
 import { useNearContext } from '../hooks'
@@ -10,26 +11,22 @@ import { ListingDetail } from '../types/listing';
 import { shortMonthNames } from '../utils/const';
 
 interface Props {
+  projectId: number
   title: string
   subtitle: string
   listing: ListingDetail
-  handleSetting: Function
-  handleDetail: Function
-  btnStatus: boolean
 }
 
-export default function ListCard({ title, subtitle, listing, handleSetting, handleDetail, btnStatus }: Props) {
+export default function ListCard({ projectId, title, subtitle, listing }: Props) {
   const { role } = useNearContext();
   const color = useColor();
+  const navigate = useNavigate();
   const startTime = new Date(listing.startTime);
   const endTime = new Date(listing.endTime);
-  const remainTime = new Date(listing.endTime - Date.now() * 1000)
-  const [accountType, setAccountType] = useState<Boolean>(true);
   let icon = role === 'user' ? SettingLightIcon : WalletIcon;
-  if (btnStatus) { icon = SettingDarkIcon }
 
   const handleWalletClick = () => {
-    role === 'user' ? handleDetail(true) : handleSetting(true)
+    role === 'user' ? navigate(`/project/${projectId}`) : navigate(`/setting/${projectId}`)
   }
 
 
@@ -135,7 +132,7 @@ export default function ListCard({ title, subtitle, listing, handleSetting, hand
           minHeight='14'
           justifyContent='center'
         >
-          <Button width='100%' color={color.main} onClick={() => handleDetail(true)}>Details</Button>
+          <Button width='100%' color={color.main} ><Link to={`/project/${projectId}`}>Details</Link></Button>
         </Flex>
       </VStack>
     </Flex>

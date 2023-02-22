@@ -9,19 +9,8 @@ import { MultiWalletConnection } from "./types";
 import { useSearchParams } from "react-router-dom";
 import { nearConfig } from "./environment";
 import { refreshWalletConnection } from "./walletSelector";
-import { PegasusContract } from "./classWrappers";
-
-export interface INearContext {
-    near: Near;
-    config: NearAppConfig;
-    walletConnection: MultiWalletConnection;
-    keyStore: any;
-    pegasusContract: PegasusContract
-    selector: WalletSelector;
-    modal: WalletSelectorModal;
-    wallet: SelectorAccount;
-    role: string
-}
+import { PegasusContract, FtContract } from "./classWrappers";
+import { INearContext } from "./near";
 
 export const NearContext = createContext<INearContext | null>(null);
 
@@ -88,6 +77,46 @@ export function useNearLogin() {
         signOutNear,
     };
 }
+
+
+export const useNearFts = () => {
+    const { usdtContract, wallet, walletConnection } = useNearContext();
+
+    const accountId = walletConnection.accountId;
+
+    const getFtMetadata = () => {
+        return usdtContract.getFtMetadata();
+    };
+
+    const getLoggedInAccountNearHoldings = async () => {
+        if (!accountId) {
+            return "0";
+        }
+        const res = await wallet.state();
+        return res.amount;
+    };
+
+    const getFtBalanceOfLoggedInAccount = () => {
+        if (!accountId) {
+            return "0";
+        }
+        return usdtContract.getFtBalanceOfOwner(accountId);
+    };
+
+    const getFtBalanceOfLoggedInAccountFormatted = (ftContractId: string) => {
+        if (!accountId) {
+            return "0";
+        }
+        return usdtContract.getFtBalanceOfOwnerFormatted(accountId);
+    };
+
+    return {
+        getFtMetadata,
+        getLoggedInAccountNearHoldings,
+        getFtBalanceOfLoggedInAccount,
+        getFtBalanceOfLoggedInAccountFormatted,
+    };
+};
 
 export const useNearLinks = () => {
     const getAccountExplorer = (accountId: string) => {

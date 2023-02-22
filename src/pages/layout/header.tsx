@@ -1,4 +1,4 @@
-import { Link, NavLink,  } from "react-router-dom";
+import { Link, NavLink, } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -26,7 +26,7 @@ const NAV_LINKS = [
   {
     name: "Listings",
     url: ["/", "/create"],
-    items: ["Live Listing","Register Project"]
+    items: ["Live Listing", "Register Project"]
   },
   {
     name: "Treasury",
@@ -35,8 +35,8 @@ const NAV_LINKS = [
   },
   {
     name: "Account",
-    url: ["/account","/create"],
-    items: ["User Dashboard","Project Dashboard"]
+    url: ["/account", "/project"],
+    items: ["User Dashboard", "Project Dashboard"]
   },
   {
     name: "Swap",
@@ -94,11 +94,9 @@ export default function Header() {
       <Spacer />
       <Flex gap="10" alignItems='center' justifyContent='center' >
         {NAV_LINKS.map((navLink, index) => (
-          <NavLink key={index} end to={navLink.url[0]} style={navData => ({
-            color: navData.isActive ? "#374151" : "#9CA3AF"
-          })} >
+          <div key={index} >
             <Menubar title={navLink.name} items={navLink.items} url={navLink.url}></Menubar>
-          </NavLink>
+          </div>
         ))}
       </Flex>
       <Spacer />

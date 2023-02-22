@@ -2,105 +2,234 @@ import BigNumber from "big.js";
 import { parseNearAmount } from "near-api-js/lib/utils/format";
 import { unifySymbol, convertToFloat } from "../utils";
 import { GAS_FOR_NFT_TRANSFER } from "../constants";
+import { Project } from "../types";
 
-import { Near } from "near-api-js";
-
-interface RaffleInfo {
-  raffle_id: number;
-  creator_id: string;
-  nft_contract_id: string;
-  token_id: string;
-  ft_contract_id: string;
-  price: string;
-  end_time: number;
-  num_entries: number;
-  status: string;
-  winner_id?: string;
-  ticket_supply: number;
-  active: boolean;
-  tokenName?: string;
-  claimed: boolean;
-}
+import { Contract, Near } from "near-api-js";
+import { FtContractFactory, FtContract } from "./ftContract";
 
 const FETCH_COUNT = 50;
 
 export class PegasusContract {
   pegasusContract: any;
+  initFtContract: Function;
   near: Near;
 
   constructor(
     pegasusContract: any,
-    near: Near
+    initFtContract: Function,
+    near: Near,
   ) {
     this.pegasusContract = pegasusContract;
+    this.initFtContract = initFtContract
     this.near = near;
   }
 
-  get_sale = async (sale_id: string, account_id: string): Promise<number[]> => {
-    return await this.pegasusContract.get_raffle_ids_by_creator_id({ account_id: account_id });
+  getProject = async (project_id: number): Promise<Project> => {
+    const res = await this.pegasusContract.get_project({ project_id: project_id });
+    return res;
   };
 
-  get_sales = async (account_id: string): Promise<Array<string>> => {
-    return await this.pegasusContract.get_num_raffles(account_id);
+  getProjects = async (from_index: number | null, limit: number | null): Promise<Array<Project>> => {
+    const res = await this.pegasusContract.get_projects({ from_index, limit });
+    return res;
   };
 
-  getNumTicketsSold = async (raffleIndex: number): Promise<number> => {
-    return await this.pegasusContract.get_num_tickets_sold({ raffle_index: raffleIndex });
+  getProjectsById = async (project_ids: Array<number>): Promise<Array<Project>> => {
+    return await this.pegasusContract.get_projects_by_id({ project_ids });
   };
 
-  getNftContractId = async (raffleIndex: number): Promise<string> => {
-    return await this.pegasusContract.get_nft_contract_id({ raffle_index: raffleIndex });
+  getNumBalances = async (project_id: number, account_id: string): Promise<number> => {
+    return await this.pegasusContract.get_num_balances({ project_id, account_id });
   };
 
-  getTokenId = async (raffleIndex: number): Promise<string> => {
-    return await this.pegasusContract.get_token_id({ raffle_index: raffleIndex });
+  getListingFeeNear = async (): Promise<number> => {
+    return await this.pegasusContract.get_listing_fee_near();
   };
 
-  getActive = async (raffleIndex: number): Promise<boolean> => {
-    return await this.pegasusContract.get_active({ raffle_index: raffleIndex });
+  getListingFeeDenominator = async (): Promise<number> => {
+    return await this.pegasusContract.get_listing_fee_denominator();
   };
 
-  getEndTime = async (raffleIndex: number): Promise<number> => {
-    return await this.pegasusContract.get_end_time({ raffle_index: raffleIndex });
-  };
+  registerProject = async (
+    accoun_id: string,
+    ft_contract_id: string,
+    title: string,
+    sub_title: string,
+    token_ticker: string,
+    logo: string,
+    starting_price: number,
+    email: string,
+    telegram: string,
+    in_token_account_id: string,
+    out_token_account_id: string,
+    total_tokens: number,
+    coingecko: string,
+    facebook: string,
+    instagram: string,
+    twitter: string,
+    description: string,
+    start_time: number,
+    end_time: number,
+    cliff_period: number,
+  ) => {
 
-  getClaimed = async (raffleIndex: number): Promise<boolean> => {
-    return await this.pegasusContract.get_claimed({ raffle_index: raffleIndex });
-  };
+    const projectRegisterFee = BigInt(await this.getListingFeeNear());
+    const callbackUrl = `${window.location.origin}/raffles/`;
 
-  getWinnerId = async (raffleIndex: number): Promise<string> => {
-    return await this.pegasusContract.get_winner_id({ raffle_index: raffleIndex });
-  };
+    const ftContract = new FtContract(this.initFtContract(ft_contract_id));
+    const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
+    const metadata = await ftContract!.getFtMetadata();
+    const projectRegisterValue = BigInt(20 * (10 ** metadata.decimals))
+    const attachDeposit = (projectRegisterValue);
 
-  getBuyerRaffleSupply = async (accountId: string): Promise<string> => {
-    return await this.pegasusContract.get_buyer_raffle_supply({ account_id: accountId });
-  };
+    const msg = JSON.stringify({
+      msg_type: true,
+      msg_data: JSON.stringify({
+        title,
+        sub_title,
+        token_ticker,
+        logo,
+        starting_price: starting_price * (10 ** metadata.decimals),
+        email,
+        telegram,
+        in_token_account_id,
+        out_token_account_id,
+        total_tokens,
+        coingecko,
+        facebook,
+        instagram,
+        twitter,
+        description,
+        start_time: (start_time * 10 ** 6).toString(),
+        end_time: (end_time * 10 ** 6).toString(),
+        cliff_period: cliff_period.toString(),
+      })
+    });
 
-  getBuyerRaffleIds = async (accountId: string): Promise<number[]> => {
-    const supply = await this.getBuyerRaffleSupply(accountId);
-    let ids: number[] = [];
-    for (let i = 0; i <= Number(supply) / FETCH_COUNT; i++) {
-      ids.push(
-        ...(await this.pegasusContract.get_buyer_raffle_ids({
-          account_id: accountId,
-          start_index: i * FETCH_COUNT,
-          count: FETCH_COUNT,
-        }))
-      );
+    if (BigNumber(balance) > BigNumber(0)) {
+      return await ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
+    } else {
+      const account: any = await this.near.account(accoun_id);
+      await account.signAndSendTransaction({
+        receiverId: this.pegasusContract.contractId,
+        actions: [
+          ftContract!.storageDeposit(this.pegasusContract.contractId),
+          ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl),
+        ],
+      });
     }
-    return ids;
   };
 
-  getRaffleCreationFee = async (): Promise<string> => {
-    return await this.pegasusContract.get_raffle_creation_fee();
+  activeProject = async (
+    accoun_id: string,
+    ft_contract_id: string,
+    project_id: number,
+    amount: number
+  ) => {
+
+    const callbackUrl = `${window.location.origin}/projects/`;
+
+    const ftContract = new FtContract(this.initFtContract(ft_contract_id));
+    const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
+    const metadata = await ftContract!.getFtMetadata();
+    const projectRegisterValue = BigInt(20 * (10 ** metadata.decimals))
+    const attachDeposit = (projectRegisterValue)
+
+    const msg = JSON.stringify({
+      msg_type: false,
+      msg_data: {
+        project_id,
+      }
+    });
+
+    if (BigNumber(balance) > BigNumber(0)) {
+      return await ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
+    } else {
+      const account: any = await this.near.account(accoun_id);
+      await account.signAndSendTransaction({
+        receiverId: this.pegasusContract.contractId,
+        actions: [
+          ftContract!.storageDeposit(this.pegasusContract.contractId),
+          ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl),
+        ],
+      });
+    }
   };
 
-  getInitialStorageCost = async (): Promise<string> => {
-    return await this.pegasusContract.get_initial_storage_cost();
+  projectDepositInToken = async (
+    accoun_id: string,
+    ft_contract_id: string,
+    project_id: number,
+    amount: number
+  ) => {
+
+    const callbackUrl = `${window.location.origin}/project/${project_id}`;
+
+    const ftContract = new FtContract(this.initFtContract(ft_contract_id));
+    const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
+    const metadata = await ftContract!.getFtMetadata();
+    const attachDeposit = BigInt(amount * (10 ** metadata.decimals))
+    console.log(attachDeposit)
+
+    const msg = JSON.stringify({
+      msg_type: false,
+      msg_data: {
+        project_id,
+      }
+    });
+
+    if (BigNumber(balance) > BigNumber(0)) {
+      return await ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
+    } else {
+      const pegasusAccount: any = await this.near.account(this.pegasusContract.contractId);
+      await pegasusAccount.signAndSendTransaction({
+        receiverId: this.pegasusContract.contractId,
+        actions: [
+          ftContract!.storageDeposit(this.pegasusContract.contractId),
+          ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl),
+        ],
+      });
+    }
   };
 
-  getTicketStorageCost = async (): Promise<string> => {
-    return await this.pegasusContract.get_ticket_storage_cost();
+  projectWithdrawInToken = async (
+    project_id: number,
+    amount: number | null
+  ) => {
+
+    const raffleCreationFee = BigInt(await this.getListingFeeNear());
+
+    const attachDeposit = (raffleCreationFee);
+    const callbackUrl = `${window.location.origin}/projects/`;
+
+    return await this.pegasusContract.project_withdraw_in_token({
+      args: {
+        project_id,
+        amount
+      },
+      amount: attachDeposit.toString(),
+      callbackUrl,
+    });
+  };
+
+  projectWithdrawOutToken = async (
+    project_id: number,
+    amount: number | null
+  ) => {
+
+    const raffleCreationFee = BigInt(await this.getListingFeeNear());
+
+    const attachDeposit = (raffleCreationFee);
+    const callbackUrl = `${window.location.origin}/projects/`;
+
+    return await this.pegasusContract.project_withdraw_out_token({
+      args: {
+        project_id,
+        amount
+      },
+      amount: attachDeposit.toString(),
+      callbackUrl,
+    });
   };
 
 }

@@ -1,17 +1,17 @@
-import { Grid, GridItem, Flex, Button } from "@chakra-ui/react";
-import SettingBlank from "../components/SettingBlank";
+import { Grid } from "@chakra-ui/react";
 import { token1, token2, token3, token4, token5 } from "../utils/tokens";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import ListCard from '../components/ListCard';
 import TitleCard from '../components/TitleCard';
 // import DetailCard from '../components/DetailCard';
 import DetailCard from '../components/DetailCard';
 import { ListingDetail } from '../types/listing';
+import { LoadableResult } from '../types/project';
+import { useColor, useProjects, useNearContext, useNearLogin, RegisterProjectParameters, Project } from '../hooks';
 import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 
 
 export default function Listings() {
-  const [detailOpen, setDetailOpen] = useState<boolean>(false);
   const [settingOpen, setSettingOpen] = useState<boolean>(false);
 
   const listing1: ListingDetail = {
@@ -35,49 +35,20 @@ export default function Listings() {
     endTime: 1677715200000,
     progress: 0
   }
+  const { projects, reload } = useProjects(null, null);
+  useEffect(() => {
+
+  }, [])
   return (
     <>
-      <TitleCard title={settingOpen ? 'Live Listings Panel' : 'Live Listings'} />
-      {detailOpen ? (
-        <Grid gap={10} paddingY='4'>
-          <Flex>
-            <Button
-              variant='ghost'
-              colorScheme='purple'
-              leftIcon={<ArrowLeftIcon />}
-              onClick={() => setDetailOpen(false)}>
-              Back
-            </Button>
-          </Flex>
-          <DetailCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
-        </Grid>
-      ) : settingOpen ? (
-        <Flex gap={1} paddingY="4" flexDirection={'column'}>
-          <Flex>
-            <Button
-              variant='ghost'
-              colorScheme='purple'
-              leftIcon={<ArrowLeftIcon />}
-              onClick={() => setSettingOpen(false)}>
-              Back
-            </Button>
-          </Flex>
-          <Grid templateColumns='repeat(3, 1fr)' gap={6}>
-            <GridItem colSpan={1}>
-              <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
-            </GridItem>
-            <GridItem colSpan={2}>
-              <SettingBlank title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} />
-            </GridItem>
-          </Grid>
-        </Flex>
-      ) : (
-        <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY='4'>
-          <ListCard title={'STARLUX'} subtitle={'1% IDO OFFERINGS'} listing={listing1} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
-          <ListCard title={'DWINDLE'} subtitle={'4% INITIAL SALE'} listing={listing2} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
-          <ListCard title={'THE SILICA'} subtitle={'INVESTOR ROUNDS'} listing={listing3} handleSetting={setSettingOpen} handleDetail={setDetailOpen} btnStatus={settingOpen} />
-        </Grid>
-      )}
+      <TitleCard title={'Live Listings'} />
+      <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY='4'>
+        {(projects.isLoading || projects.isError) ? ('loading....') : (
+          projects.value.map((project, idx) => (
+            <ListCard key={idx} projectId={project.project_id} title={project.title} subtitle={project.sub_title} listing={listing1} />
+          ))
+        )}
+      </Grid>
     </>
   )
 }

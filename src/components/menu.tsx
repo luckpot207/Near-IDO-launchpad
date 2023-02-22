@@ -15,7 +15,7 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react"
 import { useColor } from '../hooks';
-import { Link, NavLink,  } from "react-router-dom";
+import { Link, NavLink, } from "react-router-dom";
 
 
 interface Props {
@@ -48,20 +48,20 @@ export default function MenuBars({ title, items, url }: Props) {
                     onMouseEnter={onOpen}
                     onMouseLeave={onClose}
                     paddingY='0'
-                    >
+                >
                     {items.map((item, index) => (
                         <NavLink key={index} end to={url[index]} style={navData => ({
                             color: navData.isActive ? "#374151" : "#9CA3AF"
-                          })} >
+                        })} >
                             <MenuItem
                                 _hover={{ bg: color.progressStatus }}
                                 bg='#d9d9d9'
                                 textAlign='center'
                             > {item} </MenuItem>
-                          </NavLink>
+                        </NavLink>
                     ))}
                 </MenuList>) : ""
-                }
+            }
         </Menu>
     )
 }

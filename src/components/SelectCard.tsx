@@ -4,11 +4,12 @@ import { useColor } from '../hooks';
 interface Props {
   title: string
   placeholder: string
+  options: string[]
   required: boolean
   setData: Function
 }
 
-export default function SelectCard({ title, placeholder = '', required, setData }: Props) {
+export default function SelectCard({ title, placeholder = '', options, required, setData }: Props) {
   const color = useColor();
   return (
     <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='4'>
@@ -31,9 +32,9 @@ export default function SelectCard({ title, placeholder = '', required, setData 
         color={color.input}
         onChange={e => setData(e.target.value)}
       >
-        <option value='1'>Token 1</option>
-        <option value='2'>Token 2</option>
-        <option value='3'>Token 3</option>
+        {options.map((option, idx) => (
+          <option key={idx} value={idx + 1}>{option}</option>
+        ))}
       </Select>
     </Flex>
   )

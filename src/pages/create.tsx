@@ -7,47 +7,107 @@ import InputAreaCard from '../components/InputAreaCard';
 import SelectCard from '../components/SelectCard';
 import DateCard from '../components/DateCard';
 import RuleCard from '../components/RuleCard';
-import { useColor } from '../hooks';
+import { useColor, useRegisterProject, useNearContext, useNearLogin, RegisterProjectParameters } from '../hooks';
 import { ListingDetail, NftImageType } from '../types';
 import { token1, token2 } from '../utils/tokens';
-import { directionProp } from '../utils/style';
+import { payment } from '../utils/const';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import USDT from '../assets/img/icons/usdt.svg'
+import USDC from '../assets/img/icons/disc.svg'
+import NEAR from '../assets/img/icons/near.svg'
 
 export default function Create() {
+  const { usdtContract, config } = useNearContext();
+  const { isLoggedInNear, accountIdNear } = useNearLogin();
+  const { registerProject } = useRegisterProject();
   const color = useColor();
   const fileUploadInputRef = useRef<HTMLInputElement | null>(null);
   const [isCropped, setIsCropped] = useState<boolean>(false);
   const [cropperInstance, setCropperInstance] = useState<Cropper>();
-  const [tokenName, setTokenName] = useState<string>('Noname Sales');
-  const [subtitle, setSubtitle] = useState<string>('');
+  const [userBalance, setUserBalance] = useState<string>('');
+  const [title, setTitle] = useState<string>('Noname Sales');
+  const [subTitle, setSubTitle] = useState<string>('');
   const [tokenTicker, setTokenTicker] = useState<string>('');
+  const [startingPrice, setStartingPrice] = useState<number>(0);
   const [email, setEmail] = useState<string>('');
-  const [telegramContact, setTelegramContact] = useState<string>('');
-  const [token, setToken] = useState<string>('');
-  const [totalAmount, setTotalAmount] = useState<number>(0);
-  const [coingeckoUrl, setCoingeckoUrl] = useState<string>('');
+  const [telegram, setTelegram] = useState<string>('');
+  const [token, setToken] = useState<number>(0);
+  const [totalTokens, setTotalTokens] = useState<number>(0);
+  const [coingecko, setCoingecko] = useState<string>('');
+  const [facebook, setFacebook] = useState<string>('');
+  const [instagram, setInstagram] = useState<string>('');
+  const [twitter, setTwitter] = useState<string>('');
   const [idoStartDate, setIdoStartDate] = useState<Date>();
   const [idoEndDate, setIdoEndDate] = useState<Date>();
   const [depositStartDate, setDepositStartDate] = useState<Date>();
   const [depositEndDate, setDepositEndDate] = useState<Date>();
+  const [cliffPeriod, setCliffPeriod] = useState<number>(0);
+  const [description, setDescription] = useState<string>('');
   const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
   const [imageUploadUri, setImageUploadUri] = useState<string>();
   const [imageUploadBlob, setImageUploadBlob] = useState<Blob | null>(new Blob());
   const [submitOpen, setSubmitOpen] = useState<boolean>(false);
 
-  const listing1: ListingDetail = {
-    fromToken: token1,
-    toToken: token2,
-    startTime: 1676419200000,
-    endTime: 1677024000000,
-    progress: 70
+  const blobToBase64 = (blob: Blob) => {
+    // check max. file size is not exceeded
+    let base64: string | ArrayBuffer = '';
+    const reader = new FileReader();
+    reader.onloadend = () => console.log(reader.result);
+    reader.readAsDataURL(blob);
+
+    reader.onload = () => {
+      console.log(reader.result); //base64encoded string
+      base64 = reader.result ?? '';
+    };
+    reader.onerror = error => {
+      console.log("Error: ", error);
+    };
+
+    return base64;
+  }
+
+  const handleRegisterProject = () => {
+    if (!title) { setSubmitOpen(false); return; }
+    if (!imageUploadBlob) return;
+    const logo = "blobToBase64(imageUploadBlob)";
+    if (!idoStartDate || !idoEndDate) return;
+    const startTime = Math.floor(new Date(idoStartDate).getTime() / 1000)
+    const endTime = Math.floor(new Date(idoEndDate).getTime() / 1000)
+    const wrappedCliffPeriod = cliffPeriod * (10 ** 6)
+    registerProject(
+      {
+        accountId: accountIdNear,
+        ftContractId: config.usdtContractId,
+        title,
+        subTitle,
+        tokenTicker,
+        logo,
+        startingPrice,
+        email,
+        telegram,
+        inTokenAccountId: config.usdtContractId,
+        outTokenAccountId: 'usdfx_test_5.xuguangxia.testnet',
+        totalTokens,
+        coingecko,
+        facebook,
+        instagram,
+        twitter,
+        description,
+        startTime,
+        endTime,
+        cliffPeriod: wrappedCliffPeriod,
+      }
+    )
+  }
+
+  const getUserBalance = async () => {
+    setUserBalance(await usdtContract.getFtBalanceOfOwnerFormatted(accountIdNear))
   }
 
   useEffect(() => {
-    if (!tokenName) setTokenName('Noname Sales')
-  }, [tokenName])
+    if (isLoggedInNear) getUserBalance()
+  }, [isLoggedInNear])
 
   return (
     <>
@@ -78,10 +138,10 @@ export default function Create() {
               </Flex>
               <Flex alignItems='center' flexDirection='column' justifyContent='center' marginY={4}>
                 <Text as='h2' fontSize='14px' textAlign='start' color={color.fadeText} marginBottom={4}>
-                  You are about to pay $500 USDT.e to Pegasus for project registration and listing fee. Kindly click pay to deduct $500 from your wallet
+                  You are about to pay 500 {payment[token]} to Pegasus for project registration and listing fee. Kindly click pay to deduct 500 {payment[token]} from your wallet
                 </Text>
-                <Text as='h2' fontSize='64px' textAlign='center' fontWeight='bold' marginY={2}>$500</Text>
-                <Text as='h2' fontSize='16px' textAlign='center' >- usd -</Text>
+                <Text as='h2' fontSize='64px' textAlign='center' fontWeight='bold' marginY={2}>500</Text>
+                <Text as='h2' fontSize='16px' textAlign='center' >- {payment[token]} -</Text>
               </Flex>
               <Flex alignItems='center' flexDirection='column' marginY={8}>
                 <Flex
@@ -108,7 +168,7 @@ export default function Create() {
                     </Flex >
                     <Flex justifyContent='end' margin='5px'>
                       <Image src={USDT} />
-                      <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px' color={color.black}>{'USDT.e'}</Text>
+                      <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px' color={color.black}>{payment[token]}</Text>
                     </Flex>
                   </Flex>
                 </Flex>
@@ -128,7 +188,7 @@ export default function Create() {
                   onChange={e => console.log(e)}
                 >
                   <Text as='h3' fontSize='14px' fontWeight={500} textAlign='start'>{'AVAILABLE TO SEND'}</Text>
-                  <Text as='h2' fontSize='18px' textAlign='end' >{'$16,980'}</Text>
+                  <Text as='h2' fontSize='18px' textAlign='end' >{userBalance}</Text>
                 </Flex>
                 <Flex
                   width='100%'
@@ -164,11 +224,11 @@ export default function Create() {
                   onChange={e => console.log(e)}
                 >
                   <Text as='h3' fontSize='14px' fontWeight={500} textAlign='start'>{'BALANCE TO UPDATE'}</Text>
-                  <Text as='h2' fontSize='18px' textAlign='end' color={'blue'}>{'$16,480'}</Text>
+                  <Text as='h2' fontSize='18px' textAlign='end' color={'blue'}>{Number(userBalance) - 500}</Text>
                 </Flex>
               </Flex>
               <Flex >
-                <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' width={'100%'} color={'white'}>PAY</Button>
+                <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' width={'100%'} color={'white'} onClick={handleRegisterProject}>PAY</Button>
               </Flex>
             </Flex>
           </Flex>
@@ -190,14 +250,20 @@ export default function Create() {
               <Flex marginBottom='2'>
                 <Text as='h1' fontSize='20px' fontWeight='700' textAlign='start' color={color.required}>* All Fields Mandatory</Text>
               </Flex>
-              <InputCard title='PROJECT / TOKEN NAME' placeholder='E.G. PROJECT ATLAS' required={true} setData={setTokenName} />
-              <InputCard title='SUB TITLE' placeholder='E.G. 2% LAUNCH SALE' required={true} setData={setSubtitle} />
-              <InputCard title='TOKEN TICKER' placeholder='$ TOKEN' required={true} setData={setTokenTicker} />
+              <InputCard title='PROJECT / TOKEN NAME' placeholder='E.G. PROJECT ATLAS' required={true} setData={setTitle} />
+              <InputCard title='SUB TITLE' placeholder='E.G. 2% LAUNCH SALE' required={true} setData={setSubTitle} />
+              <Flex>
+                <InputCard title='TOKEN TICKER' placeholder='$ TOKEN' required={true} setData={setTokenTicker} />
+                <InputCard title='STARTING PRICE (USD)' placeholder='0.1' required={true} setData={setStartingPrice} />
+              </Flex>
               <InputCard title='E-MAIL' placeholder='hello@johndoe.com' required={true} setData={setEmail} />
-              <InputCard title='TELEGRAM CONTACT' placeholder='https://t.me/cryptonear' required={true} setData={setTelegramContact} />
-              <SelectCard title='CHOOSE TOKEN TICKER TO RECEIVE' placeholder='PLEASE SELECT' required={true} setData={setToken} />
-              <InputCard title='TOTAL DEPOSIT TOKEN AMOUNT(FOR LAUNCHPAD)' placeholder='0' required={true} setData={setTotalAmount} />
-              <InputCard title='COINGECKO / COINMARKETCAP LINK' placeholder='https://www.coingecko.com/en/coins/bitcoin/' required={false} setData={setCoingeckoUrl} />
+              <InputCard title='TELEGRAM CONTACT' placeholder='https://t.me/cryptonear' required={true} setData={setTelegram} />
+              <SelectCard title='CHOOSE TOKEN TICKER TO RECEIVE' placeholder='PLEASE SELECT' options={['USDT', 'USDC', 'NEAR']} required={true} setData={setToken} />
+              <InputCard title='TOTAL DEPOSIT TOKEN AMOUNT(FOR LAUNCHPAD)' placeholder='0' required={true} setData={setTotalTokens} type='number' />
+              <InputCard title='COINGECKO / COINMARKETCAP LINK (OPTIONAL)' placeholder='https://www.coingecko.com/en/coins/bitcoin/' required={false} setData={setCoingecko} />
+              <InputCard title='FACEBOOK (OPTIONAL)' placeholder='https://www.facebook.com/projectname' required={false} setData={setFacebook} />
+              <InputCard title='INSTAGRAM (OPTIONAL)' placeholder='https://www.instagram.com/projectname' required={false} setData={setInstagram} />
+              <InputCard title='TWITTER (OPTIONAL)' placeholder='https://www.twitter.com/projectname' required={false} setData={setTwitter} />
             </Flex>
             <Flex flexDirection='column' width='30%'>
               <Flex marginBottom='2' justifyContent='flex-end'>
@@ -287,11 +353,40 @@ export default function Create() {
               <DateCard title='IDO END DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setIdoEndDate} />
               <DateCard title='DEPOSIT START DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setDepositStartDate} />
               <DateCard title='DEPOSIT END DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setDepositEndDate} />
+              <SelectCard title='CLIFF PERIOD' placeholder='PLEASE SELECT' options={['30 DAYS (DEFAULT)', '60 DAYS (2 MONTHS)', '90 DAYS (3 MONTHS)', '365 DAYS (1 YEAR)']} required={true} setData={setCliffPeriod} />
             </Flex>
           </Flex>
           <Flex justifyContent='center' flexDirection='column'>
-            <InputAreaCard title='BRIEF DESCRIPTION OF YOUR PROJECT' required={true} setData={setTokenTicker} />
-            <InputCard title='PAYMENT (LISTING)' placeholder='$500 $USDT.e' required={true} setData={setTokenName} direction={directionProp.row} />
+            <InputAreaCard title='BRIEF DESCRIPTION OF YOUR PROJECT' required={true} setData={setDescription} />
+            <Flex justifyContent='start' alignItems='center' marginTop='4'>
+              <Flex width='100%' paddingLeft='2'>
+                <Text as='h3' fontSize='14px' textAlign='start'>
+                  {'PAYMENT (LISTING)'}
+                </Text>
+              </Flex>
+              <Flex
+                width='100%'
+                border={'1px solid'}
+                borderRadius='2xl'
+                bgColor={color.inputbg}
+                marginTop='5px'
+                alignItems='center'
+                justifyContent={'end'}
+                color={color.border}
+              >
+                <Text
+                  minHeight='10'
+                  paddingY='2'
+                  paddingX='5'
+                  marginTop='5px'
+                  alignItems='end'
+                  fontSize='18px'
+                  color={color.input}
+                >
+                  {`500 ${payment[token]}`}
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
           <Flex justifyContent='center' flexDirection='column' marginTop='8'>
             <Text as='h3' fontSize='14px' textAlign='start'>

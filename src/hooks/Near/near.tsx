@@ -1,11 +1,27 @@
-import { connect, Contract, keyStores } from "near-api-js";
+import { connect, Contract, keyStores, Near } from "near-api-js";
 import { Buffer } from "buffer";
-import { setupSelector, refreshWalletConnection } from "./walletSelector";
-import { INearContext } from "./hooks";
+import { setupSelector, refreshWalletConnection, SelectorAccount } from "./walletSelector";
 import { nearConfig } from "./environment";
-import { PegasusContract } from "./classWrappers";
+import { FtContract, PegasusContract } from "./classWrappers";
+import { WalletSelector } from "@near-wallet-selector/core";
+import { WalletSelectorModal } from "@near-wallet-selector/modal-ui";
+import { NearAppConfig } from "./config";
+import { MultiWalletConnection } from "./types";
 
 global.Buffer = Buffer;
+
+export interface INearContext {
+    near: Near;
+    config: NearAppConfig;
+    walletConnection: MultiWalletConnection;
+    keyStore: any;
+    pegasusContract: PegasusContract
+    usdtContract: FtContract
+    selector: WalletSelector;
+    modal: WalletSelectorModal;
+    wallet: SelectorAccount;
+    role: string
+}
 
 export async function InitNearContext(): Promise<INearContext> {
     const near = await connect({
@@ -21,35 +37,28 @@ export async function InitNearContext(): Promise<INearContext> {
         nearConfig.pegasusContractId,
         {
             viewMethods: [
-                "balance_of",
-                "balances_of",
+                "get_project",
+                "get_projects",
+                "get_projects_by_id",
                 "get_num_balances",
-                "get_subscribed_sales",
-                "get_account_sales",
-                "get_sale",
-                "get_sales",
-                "get_treasury_balance",
-                "get_treasury_balances",
-                "get_treasury_num_balances",
-                "get_skyward_token_id",
-                "get_skyward_circulating_supply",
-                "get_listing_fee",
+                "get_listing_fee_near",
+                "get_listing_fee_denominator",
             ],
             changeMethods: [
-                "register_token",
-                "register_tokens",
-                "withdraw_token",
-                "donate_token_to_treasury",
-                "sale_create",
-                "sale_deposit_out_token",
-                "sale_deposit_in_token",
-                "sale_withdraw_in_token",
-                "sale_distribute_unclaimed_tokens",
-                "sale_claim_out_tokens",
-                "redeem_skyward",
+                "register_project",
+                "set_listing_fee_denominator",
             ],
         }
     );
+
+    const initFtContract = (contractId: string) => {
+        return new Contract(walletSelector.wallet, contractId, {
+            viewMethods: ["ft_balance_of", "ft_metadata"],
+            changeMethods: ["ft_transfer_call", "storage_deposit"],
+        });
+    };
+
+    const usdtContract = new FtContract(initFtContract(nearConfig.usdtContractId));
 
     const keyStore = new keyStores.BrowserLocalStorageKeyStore();
 
@@ -62,7 +71,12 @@ export async function InitNearContext(): Promise<INearContext> {
             nearConfig
         ),
         keyStore,
-        pegasusContract,
+        pegasusContract: new PegasusContract(
+            pegasusContract,
+            initFtContract,
+            near
+        ),
+        usdtContract,
         selector: walletSelector.selector,
         modal: walletSelector.modal,
         wallet: walletSelector.wallet,
