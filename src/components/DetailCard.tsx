@@ -103,9 +103,9 @@ export default function DetailCard() {
                         </Text>
                     </Flex>
                 </VStack>
-                <Hide above='sm'>
+                <Hide above='md'>
                     <VStack
-                        width={{ lg: '400px', md: '250px', sm: '150px' }}
+                        width={{ lg: '300px', md: '250px', sm: '350px' }}
                         paddingX={'24px'}
                         height={'100%'}
                         border='1px solid'
@@ -140,7 +140,7 @@ export default function DetailCard() {
                     </VStack>
                 </Hide>
 
-                <Show above='sm'>
+                <Show above='md'>
                     <HStack
                         width='100%'
                         margin='36px'
@@ -360,7 +360,7 @@ export default function DetailCard() {
                                 </Flex>
                             </VStack>
                         ) : (
-                            <Show above='sm'>
+                            <Show above='md'>
                                 <VStack
                                     width={{ lg: '400px', md: '250px', sm: '150px' }}
                                     paddingX={'24px'}
@@ -533,7 +533,7 @@ export default function DetailCard() {
                         </VStack>
                     </HStack>
                 </Show>
-                <Hide above='sm'>
+                <Hide above='md'>
                     <VStack spacing='40px' height={'100%'}>
                         <Box width='100%'>
                             <Text as='h1' fontSize='40px' textAlign='start' color={color.black}>{project.value.title}</Text>
@@ -749,7 +749,7 @@ export default function DetailCard() {
                     ) : (
                         <Hide>
                             <VStack
-                                width={{ lg: '400px', md: '250px', sm: '150px' }}
+                                width={{ lg: '400px', md: '250px', sm: '200px' }}
                                 paddingX={'24px'}
                                 height={'100%'}
                                 border='1px solid'
@@ -787,7 +787,6 @@ export default function DetailCard() {
 
                     )}
                     <VStack
-
                         spacing='40px'
                     >
                         <Box width='100%'>
