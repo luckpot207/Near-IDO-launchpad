@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Box, Flex, Text, Image, VStack, HStack, Progress, Button, Icon, Spacer } from '@chakra-ui/react';
+import { Box, Flex, Text, Image, VStack, HStack, Progress, Button, Icon, Spacer, Grid, GridItem, Show } from '@chakra-ui/react';
 import { BiRightArrowAlt as ArrowRightIcon, BiChevronDown as ArrowDownIcon } from 'react-icons/bi'
 import { useColor } from '../hooks';
 import RuleCard from './RuleCard';
@@ -35,17 +35,19 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
             borderRadius='20px'
             flexDirection='column'
         >
-            <HStack
-                spacing='900px'
+            <Flex
+                width={'100%'}
+                justifyContent={'right'}
             >
                 <Box width='100%' margin='10px' alignSelf='start'>
-
                 </Box>
                 <HStack>
-                    <Text>Details</Text>
+                    <Show above='sm'>
+                        <Text>Details</Text>
+                    </Show>
                     <Icon as={ArrowDownIcon} />
                 </HStack>
-            </HStack>
+            </Flex>
             <VStack width='100%' spacing='24px'>
                 <Image src={liveListing}></Image>
                 <Text fontFamily='DM Sans' fontSize='35px' textAlign='center' color={color.green}>
@@ -58,13 +60,13 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                     STARLUX IDO has been completed as at 21 February 2023
                 </Text>
             </VStack>
-            <HStack
-                width='80%'
+            <Grid
+                width={'100%'}
                 margin='36px'
-                justifyContent='center'
-                spacing='60px'
+                gap={5}
+                templateColumns={{ lg: 'repeat(2, 1fr)', base: 'repeat(1, 1fr)' }}
             >
-                <VStack spacing='40px' width='50%' >
+                <GridItem justifySelf={'center'}>
                     <Box width='100%'>
                         <Text as='h1' fontSize='40px' textAlign='start' color={color.black}>STARLUX</Text>
                         <Text as='h2' fontSize='14px' textAlign='start' marginTop='0px' color={color.fadeText}>1% IDO OFFERINGS</Text>
@@ -73,8 +75,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                     {/* progress bar on the left side of the page */}
 
                     <Flex
-                        minWidth='100%'
-                        minHeight='14'
                         flexDirection='column'
                     >
                         <Flex marginX='8px' alignItems='bottom'>
@@ -104,16 +104,20 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             position='relative'
                             overflow='hidden'
                         >
-                            <Text fontSize='10px' textAlign='center' paddingTop='2' color={color.background}>TOKEN LOCK</Text>
-                            <Text fontSize='20px' textAlign='center' paddingBottom='2' color={color.background}>30 DAYS CLIFF PERIOD</Text>
+                            <Box paddingX='48px'>
+                                <Text fontSize='10px' textAlign='center' paddingTop='2' color={color.background}>TOKEN LOCK</Text>
+                            </Box>
+                            <Box paddingX='48px'>
+                                <Text fontSize='20px' textAlign='center' paddingBottom='2' color={color.background}>30 DAYS CLIFF PERIOD</Text>
+                            </Box>
                             <Box width='20%' position='absolute' left='0' bgColor={color.lightBlue} height='100%' ></Box>
                         </Flex>
                     </Flex>
 
-                </VStack>
-                <VStack spacing='40px' width='50%'>
+                </GridItem>
+                <GridItem justifySelf={'center'}>
                     <Box width='100%'>
-                        <Text as='h1' fontSize='40px' textAlign='end' color={color.black}>USD$ 0.65</Text>
+                        <Text as='h1' fontSize='40px' textAlign={{ base: 'start', lg: 'end' }} color={color.black}>USD$ 0.65</Text>
                         <Text as='h2' fontSize='14px' textAlign='end' marginTop='0px' color={color.fadeText}>LAST TOKEN PRICE DURING IDO</Text>
                     </Box>
 
@@ -121,7 +125,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
 
                     <Flex
                         minWidth='100%'
-                        minHeight='14'
                         flexDirection='column'
                     >
                         <Flex marginX='8px' alignItems='bottom'>
@@ -149,29 +152,33 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             overflow='hidden'
                             shadow='lg'
                         >
-                            <Text fontSize='10px' textAlign='center' paddingTop='2'>TOKEN LOCK</Text>
-                            <Text fontSize='20px' textAlign='center' paddingBottom='2' color={color.green}>30 DAYS CLIFF PERIOD</Text>
+                            <Box paddingX='48px'>
+                                <Text fontSize='10px' textAlign='center' paddingTop='2' color={color.background}>TOKEN LOCK</Text>
+                            </Box>
+                            <Box paddingX='48px'>
+                                <Text fontSize='20px' textAlign='center' paddingBottom='2' color={color.green}>30 DAYS CLIFF PERIOD</Text>
+                            </Box>
                             <Box width='20%' position='absolute' left='0' bgColor={color.lightGreen} height='100%' ></Box>
                         </Flex>
                     </Flex>
-                </VStack>
-            </HStack>
+                </GridItem>
+            </Grid>
             <Flex
                 minWidth='80%'
                 minHeight='14'
                 justifyContent='right !important'
             >
-                <Button width='40%' color={color.main} onClick={() => { }}>WITHDRAW</Button>
+                <Button width={'200px'} color={color.main} onClick={() => { }}>WITHDRAW</Button>
             </Flex>
-            <HStack
-                width='80%'
-                margin='36px'
+            <Grid
                 justifyContent='center'
-                spacing='60px'
+                gap={10}
+                templateColumns={{ lg: 'repeat(3, 1fr)', md: 'repeat(2, 1fr)', base: 'repeat(1, 1fr)' }}
+                templateRows={{ lg: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', base: 'repeat(6, 1fr)' }}
             >
-                <VStack spacing='40px' width='400px' height={'100%'}>
+                <GridItem>
+
                     <Flex
-                        minWidth='100%'
                         minHeight='14'
                         paddingY='2'
                         paddingX='2'
@@ -180,7 +187,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                         borderColor='rock.100'
                         borderRadius='10px'
                         bgColor='rock.50'
-                        margin='20px 40px !important'
                     >
                         <Box width='100%'>
                             <Text as='h1' fontSize='14px' textAlign='start'>Live Deposits</Text>
@@ -196,8 +202,9 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             </Flex>
                         </Flex>
                     </Flex>
+                </GridItem>
+                <GridItem>
                     <Flex
-                        minWidth='100%'
                         minHeight='14'
                         paddingY='2'
                         paddingX='2'
@@ -206,7 +213,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                         borderColor='rock.100'
                         borderRadius='10px'
                         bgColor='rock.50'
-                        margin='40px 0px'
                     >
                         <Box width='100%' margin='5px'>
                             <Text as='h1' fontSize='14px' textAlign='start'>Total Tokens On Sale</Text>
@@ -224,10 +230,10 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             </Flex>
                         </Box>
                     </Flex>
-                </VStack>
-                <VStack spacing='40px' width='400px' height={'100%'}>
+
+                </GridItem>
+                <GridItem>
                     <Flex
-                        minWidth='100%'
                         minHeight='14'
                         paddingY='2'
                         paddingX='2'
@@ -236,7 +242,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                         borderColor='rock.100'
                         borderRadius='10px'
                         bgColor='rock.50'
-                        margin='20px 40px !important'
                     >
                         <Box width='100%'>
                             <Text as='h1' fontSize='14px' textAlign='start'>Live Deposits</Text>
@@ -252,8 +257,9 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             </Flex>
                         </Flex>
                     </Flex>
+                </GridItem>
+                <GridItem>
                     <Flex
-                        minWidth='100%'
                         minHeight='14'
                         paddingY='2'
                         paddingX='2'
@@ -262,7 +268,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                         borderColor='rock.100'
                         borderRadius='10px'
                         bgColor='rock.50'
-                        margin='40px 0px'
                     >
                         <Box width='100%' margin='5px'>
                             <Text as='h1' fontSize='14px' textAlign='start'>Total Tokens On Sale</Text>
@@ -280,10 +285,9 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             </Flex>
                         </Box>
                     </Flex>
-                </VStack>
-                <VStack spacing='40px' width='400px' height={'100%'}>
+                </GridItem>
+                <GridItem>
                     <Flex
-                        minWidth='100%'
                         minHeight='14'
                         paddingY='2'
                         paddingX='2'
@@ -292,7 +296,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                         borderColor='rock.100'
                         borderRadius='10px'
                         bgColor='rock.50'
-                        margin='20px 40px !important'
                     >
                         <Box width='100%'>
                             <Text as='h1' fontSize='14px' textAlign='start'>Live Deposits</Text>
@@ -308,8 +311,9 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             </Flex>
                         </Flex>
                     </Flex>
+                </GridItem>
+                <GridItem>
                     <Flex
-                        minWidth='100%'
                         minHeight='14'
                         paddingY='2'
                         paddingX='2'
@@ -318,7 +322,6 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                         borderColor='rock.100'
                         borderRadius='10px'
                         bgColor='rock.50'
-                        margin='40px 0px'
                     >
                         <Box width='100%' margin='5px'>
                             <Text as='h1' fontSize='14px' textAlign='start'>Total Tokens On Sale</Text>
@@ -336,8 +339,9 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                             </Flex>
                         </Box>
                     </Flex>
-                </VStack>
-            </HStack>
+                </GridItem>
+
+            </Grid>
             <RuleCard />
         </Flex>
     )
