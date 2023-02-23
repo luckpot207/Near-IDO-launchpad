@@ -28,6 +28,7 @@ export default function Create() {
   const [userBalance, setUserBalance] = useState<string>('');
   const [title, setTitle] = useState<string>('Noname Sales');
   const [subTitle, setSubTitle] = useState<string>('');
+  const [tokenId, setTokenId] = useState<string>('');
   const [tokenTicker, setTokenTicker] = useState<string>('');
   const [startingPrice, setStartingPrice] = useState<number>(0);
   const [email, setEmail] = useState<string>('');
@@ -87,7 +88,7 @@ export default function Create() {
         email,
         telegram,
         inTokenAccountId: config.usdtContractId,
-        outTokenAccountId: 'usdfx_test_5.xuguangxia.testnet',
+        outTokenAccountId: tokenId,
         totalTokens,
         coingecko,
         facebook,
@@ -252,6 +253,7 @@ export default function Create() {
               </Flex>
               <InputCard title='PROJECT / TOKEN NAME' placeholder='E.G. PROJECT ATLAS' required={true} setData={setTitle} />
               <InputCard title='SUB TITLE' placeholder='E.G. 2% LAUNCH SALE' required={true} setData={setSubTitle} />
+              <InputCard title='TOKEN ID' placeholder='pegasus.token.near' required={true} setData={setTokenId} />
               <Flex>
                 <InputCard title='TOKEN TICKER' placeholder='$ TOKEN' required={true} setData={setTokenTicker} />
                 <InputCard title='STARTING PRICE (USD)' placeholder='0.1' required={true} setData={setStartingPrice} />
