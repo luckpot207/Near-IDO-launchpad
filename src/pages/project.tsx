@@ -28,17 +28,17 @@ export default function ProjectDashboard() {
 
   const handleDeposit = (ftContractId: string) => {
     if (depositBalance <= 0) return;
-    activeProject({
-      accountId: accountIdNear,
-      ftContractId,
-      projectId: 0,
-      amount: depositBalance
-    })
+    // activeProject({
+    //   accountId: accountIdNear,
+    //   ftContractId,
+    //   projectId: 0,
+    //   amount: depositBalance
+    // })
   }
 
   if (projects.isLoading || projects.isError) return (<>loading.....</>)
   else {
-    const project = projects.value[0];
+    const project = projects.value[projects.value.length - 1];
     return (
       <>
         <TitleCard title={submitOpen ? 'Listing Confirmation' : 'Project Dashboard'} />
@@ -143,6 +143,7 @@ export default function ProjectDashboard() {
               <Flex flexDirection='column' width='65%'>
                 <LabelCard title='PROJECT / TOKEN NAME' value={project.title} />
                 <LabelCard title='SUB TITLE' value={project.sub_title} />
+                <LabelCard title='TOKEN ID' value={project.out_token_account_id} />
                 <Flex justifyContent={'space-between'}>
                   <LabelCard title='TOKEN TICKER' value={project.token_ticker} />
                   <LabelCard title='STARTING PRICE (USD)' value={project.starting_price.toString()} />
