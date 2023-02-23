@@ -11,7 +11,7 @@ const theme = extendTheme({
   },
   colors: {
     brand: {
-      50: '#F9FAFB',
+      50:  '#F9FAFB',
       100: '#E5E7EB',
       200: '#f8c676',
       300: '#f7bd5f',
@@ -23,7 +23,7 @@ const theme = extendTheme({
       900: '#391b56'
     },
     rock: {
-      50: '#F9FAFB',
+      50:  '#F9FAFB',
       100: '#E5E7EB',
       200: '#9CA3AF',
       300: '#D1D5DB',
@@ -56,6 +56,9 @@ const theme = extendTheme({
       h5: {
         color: mode('rock.900', 'white')(props)
       },
+      menu1: {
+        color: mode('rock.300', 'white')(props)
+      }
     })
   }
 }) as (ThemeBase & {
