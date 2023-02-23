@@ -13,13 +13,19 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  useColorModeValue
+  useColorModeValue,
+  Show,
+  Hide,
+  MenuGroup,
+  MenuDivider,
+  MenuIcon
 } from "@chakra-ui/react"
 import { BiLogOut as LogoutIcon } from 'react-icons/bi'
 // import Dropdown from 'react-bootstrap/Dropdown';
 import { useColor } from "../../hooks";
 import Menubar from "../../components/menu";
 import { useNearLogin } from "../../hooks/Near";
+import { AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
 
 
 const NAV_LINKS = [
@@ -63,9 +69,9 @@ export default function Header() {
     accountIdNear && accountIdNear.length > 20 ? `${accountIdNear.substring(0, 19)}...` : accountIdNear;
 
   const connectWallet = (
-    <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
+    <Button aria-label='$' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
       <Text size="sm" sx={{ pr: 1 }}>
-        {isLoggedInNear ? displayAccountId : "Connect Wallet"}
+        {isLoggedInNear ? displayAccountId : "$"}
       </Text>
       {isLoggedInNear && <LogoutIcon />}
     </Button>
@@ -86,31 +92,63 @@ export default function Header() {
       zIndex={99999}
       bgColor={color.background}
     >
-      <Box w='10%' >
+      <Flex alignItems={'center'} width={{ base: '80px', md: '100px', lg: '110px' }}>
         <Link to='/'>
           <Image src={color.logoMode} />
         </Link>
-      </Box>
+      </Flex>
       <Spacer />
       <Flex gap="10" alignItems='center' justifyContent='center' >
-        {NAV_LINKS.map((navLink, index) => (
-          <NavLink key={index} end to={navLink.url[0]} style={navData => ({
-            color: navData.isActive ? "#374151" : "#9CA3AF"
-          })} >
-            <Menubar title={navLink.name} items={navLink.items} url={navLink.url}></Menubar>
-          </NavLink>
-        ))}
+        <Show above="md">
+          {NAV_LINKS.map((navLink, index) => (
+            <NavLink key={index} end to={navLink.url[0]} style={navData => ({
+              color: navData.isActive ? "#374151" : "#9CA3AF"
+            })} >
+              <Menubar title={navLink.name} items={navLink.items} url={navLink.url}></Menubar>
+            </NavLink>
+          ))}
+        </Show>
+
       </Flex>
       <Spacer />
       <Flex gap="5" as="div" width='ls' justifyContent='center'>
-        <IconButton
-          aria-label="Switch theme"
-          icon={<color.changeMode />}
-          isRound
-          variant="solid"
-          onClick={toggleColorMode}
-        />
-        {connectWallet}
+        <Show above="md">
+          <IconButton
+            aria-label="Switch theme"
+            icon={<color.changeMode />}
+            isRound
+            variant="solid"
+            onClick={toggleColorMode}
+          />
+          {connectWallet}
+        </Show>
+
+
+        <Hide above="md">
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label='Options'
+              icon={<HamburgerIcon />}
+              variant='outline'
+            />
+            <MenuList color={color.blue} paddingX="10px">
+              {NAV_LINKS.map((navLink, index) => (
+                <MenuItem key={index}>
+                  <Link to={navLink.url[0]}>
+                    <Text width={"100%"}>{navLink.name}</Text>
+                  </Link>
+                </MenuItem>
+              ))}
+              <MenuItem>
+                <Text width={"100%"} onClick={toggleColorMode}>Change Theme</Text>
+              </MenuItem>
+              <MenuItem>
+                <Text width={"100%"} onClick={handleConnectNear}>Select Wallet</Text>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Hide>
       </Flex>
     </Flex >
   );

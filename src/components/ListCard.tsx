@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
-import { Box, Flex, Text, Image, VStack, Progress, Button, Icon, HStack, IconButton } from '@chakra-ui/react';
+import { Box, Flex, Text, Image, VStack, Progress, Button, Icon, HStack, IconButton, Spacer, Grid, GridItem, Show, Hide } from '@chakra-ui/react';
 import { useNearContext } from '../hooks'
 import { useColor } from '../hooks';
 import SettingLightIcon from '../assets/img/icons/setting.svg'
@@ -44,70 +44,129 @@ export default function ListCard({ projectId, title, subtitle, listing }: Props)
       flexDirection='column'
       position='relative'
     >
-      <HStack justifyContent={'space-between'} width={'100%'} marginY={4}>
-        <Flex flexDirection='column' justifyContent={'flex-start'}>
-          <Text as='h1' fontSize='20px' textAlign='start'>{title}</Text>
+      <Grid templateColumns='repeat(2, 1fr)' width={'100%'} marginY={'4px'} paddingX={'5px'}>
+        <GridItem justifyItems={'start'} >
+          <Text as='h1' fontSize='20px' textAlign='start' height={'50px'}>{title}</Text>
           <Text as='h2' fontSize='14px' textAlign='start'>{subtitle}</Text>
-        </Flex>
-        <Flex justifyContent={'flex-end'}>
+        </GridItem>
+        <GridItem justifySelf={'right'}>
           <Button onClick={handleWalletClick} bg='transparent' padding={0}>
             <Image src={icon} />
           </Button>
-        </Flex>
-      </HStack>
+        </GridItem>
+      </Grid>
       <VStack width='100%' spacing='24px'>
-        <Flex
-          minWidth='100%'
-          minHeight='14'
-          paddingY='4'
-          paddingX='4'
-          alignItems='center'
-          border='1px solid'
-          borderColor='rock.100'
-          borderRadius='10px'
-          bgColor='rock.50'
-          margin='10 0px'
-        >
-          <Box width='100%'>
-            <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
-            <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.fromToken.supply.toLocaleString()}</Text>
-          </Box>
-          <Flex width='100%' justifyContent='end' flexDirection='column'>
-            <Flex margin='5px' justifyContent='end'>
-              <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.fromToken.name}</Text>
-            </Flex >
-            <Flex justifyContent='end' margin='5px'>
-              <Image src={listing.fromToken.icon} />
-              <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.fromToken.symbol}</Text>
+        <Show above='sm'>
+          <Flex
+            minWidth='100%'
+            minHeight='14'
+            paddingY='4'
+            paddingX='4'
+            alignItems='center'
+            border='1px solid'
+            borderColor='rock.100'
+            borderRadius='10px'
+            bgColor='rock.50'
+            margin='10 0px'
+          >
+            <Box width='100%'>
+              <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
+              <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.fromToken.supply.toLocaleString()}</Text>
+            </Box>
+            <Flex width='100%' justifyContent='end' flexDirection='column'>
+              <Flex margin='5px' justifyContent='end'>
+                <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.fromToken.name}</Text>
+              </Flex >
+              <Flex justifyContent='end' margin='5px'>
+                <Image src={listing.fromToken.icon} />
+                <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.fromToken.symbol}</Text>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-        <Flex
-          minWidth='100%'
-          minHeight='14'
-          paddingY='4'
-          paddingX='4'
-          alignItems='center'
-          border='1px solid'
-          borderColor='rock.100'
-          borderRadius='10px'
-          bgColor='rock.50'
-          margin='10 0px'
-        >
-          <Box width='100%'>
-            <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
-            <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.fromToken.supply.toLocaleString()}</Text>
-          </Box>
-          <Flex width='100%' justifyContent='end' flexDirection='column'>
-            <Flex margin='5px' justifyContent='end'>
-              <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.toToken.name}</Text>
-            </Flex >
-            <Flex justifyContent='end' margin='5px'>
-              <Image src={listing.toToken.icon} />
-              <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.toToken.symbol}</Text>
+        </Show>
+        <Hide above='sm'>
+          <Flex
+            flexDirection={'column'}
+            minWidth='100%'
+            minHeight='14'
+            paddingY='4'
+            paddingX='4'
+            alignItems='center'
+            border='1px solid'
+            borderColor='rock.100'
+            borderRadius='10px'
+            bgColor='rock.50'
+            margin='10 0px'
+          >
+            <Text as='h1' fontSize='14px' textAlign='center'>Current Deposits</Text>
+            <Text as='h2' fontSize='18px' textAlign='center' marginTop='10px'>{listing.fromToken.supply.toLocaleString()}</Text>
+            <Flex width='100%' justifyContent='end' flexDirection='column'>
+              <Flex margin='5px' justifyContent='end'>
+                <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.fromToken.name}</Text>
+              </Flex >
+              <Flex justifyContent='center' margin='5px'>
+                <Image src={listing.fromToken.icon} />
+                <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.fromToken.symbol}</Text>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
+        </Hide>
+        <Show above='sm'>
+          <Flex
+            minWidth='100%'
+            minHeight='14'
+            paddingY='4'
+            paddingX='4'
+            alignItems='center'
+            border='1px solid'
+            borderColor='rock.100'
+            borderRadius='10px'
+            bgColor='rock.50'
+            margin='10 0px'
+          >
+            <Box width='100%'>
+              <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
+              <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{listing.fromToken.supply.toLocaleString()}</Text>
+            </Box>
+            <Flex width='100%' justifyContent='end' flexDirection='column'>
+              <Flex margin='5px' justifyContent='end'>
+                <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.fromToken.name}</Text>
+              </Flex >
+              <Flex justifyContent='end' margin='5px'>
+                <Image src={listing.fromToken.icon} />
+                <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.fromToken.symbol}</Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Show>
+        <Hide above='sm'>
+          <Flex
+            flexDirection={'column'}
+            minWidth='100%'
+            minHeight='14'
+            paddingY='4'
+            paddingX='4'
+            alignItems='center'
+            border='1px solid'
+            borderColor='rock.100'
+            borderRadius='10px'
+            bgColor='rock.50'
+            margin='10 0px'
+          >
+            <Text as='h1' fontSize='14px' textAlign='center'>Current Deposits</Text>
+            <Text as='h2' fontSize='18px' textAlign='center' marginTop='10px'>{listing.toToken.supply.toLocaleString()}</Text>
+            <Flex width='100%' justifyContent='end' flexDirection='column'>
+              <Flex margin='5px' justifyContent='end'>
+                <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{listing.toToken.name}</Text>
+              </Flex >
+              <Flex justifyContent='center' margin='5px'>
+                <Image src={listing.toToken.icon} />
+                <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{listing.toToken.symbol}</Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Hide>
+
         <Flex >
           <Icon as={ArrowDownIcon} boxSize={8} color={color.black} />
         </Flex>

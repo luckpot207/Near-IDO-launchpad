@@ -169,7 +169,7 @@ export default function SettingCard() {
                 position='relative'
               >
                 {editDetail ? (<Button
-                  aria-label='Connect Wallet'
+                  aria-label='$'
                   bgGradient='linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)'
                   variant='solid'
                   position='absolute'

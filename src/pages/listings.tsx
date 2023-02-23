@@ -1,4 +1,4 @@
-import { Grid } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
 import { token1, token2, token3, token4, token5 } from "../utils/tokens";
 import { useState, useEffect } from 'react';
 import ListCard from '../components/ListCard';
@@ -41,14 +41,20 @@ export default function Listings() {
   }, [])
   return (
     <>
-      <TitleCard title={'Live Listings'} />
-      <Grid templateColumns='repeat(3, 1fr)' gap={10} paddingY='4'>
-        {(projects.isLoading || projects.isError) ? ('loading....') : (
-          projects.value.map((project, idx) => (
-            <ListCard key={idx} projectId={project.project_id} title={project.title} subtitle={project.sub_title} listing={listing1} />
-          ))
-        )}
-      </Grid>
+      <Box >
+        <Flex justifyContent={'center'}>
+          <TitleCard title={'Live Listings'} />
+        </Flex>
+
+        <Grid templateColumns={{ lg: 'repeat(3, 1fr)', md: 'repeat(2, 1fr)', base: 'repeat(, 1fr)' }} gap={10} paddingY='4'>
+          {(projects.isLoading || projects.isError) ? ('loading....') : (
+            projects.value.map((project, idx) => (
+              <ListCard key={idx} projectId={project.project_id} title={project.title} subtitle={project.sub_title} listing={listing1} />
+            ))
+          )}
+        </Grid>
+      </Box>
+
     </>
   )
 }
