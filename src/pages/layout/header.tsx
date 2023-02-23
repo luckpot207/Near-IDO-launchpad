@@ -18,7 +18,8 @@ import {
   Hide,
   MenuGroup,
   MenuDivider,
-  MenuIcon
+  MenuIcon,
+  MenuOptionGroup
 } from "@chakra-ui/react"
 import { BiLogOut as LogoutIcon } from 'react-icons/bi'
 // import Dropdown from 'react-bootstrap/Dropdown';
@@ -122,8 +123,6 @@ export default function Header() {
           />
           {connectWallet}
         </Show>
-
-
         <Hide above="md">
           <Menu>
             <MenuButton
@@ -134,15 +133,35 @@ export default function Header() {
             />
             <MenuList color={color.blue} paddingX="10px">
               {NAV_LINKS.map((navLink, index) => (
-                <MenuItem key={index}>
-                  <Link to={navLink.url[0]}>
-                    <Text width={"100%"}>{navLink.name}</Text>
-                  </Link>
-                </MenuItem>
+                navLink.url.length > 1 ?
+                  <Box>
+                    <MenuOptionGroup color={color.contact} fontSize={'18px'} fontFamily={'Poppins'} defaultValue='desc' title={navLink.name}>
+                      {
+                        navLink.url.map((m, i) => (
+                          <MenuItem key={i}>
+                            <Link to={m}>
+                              <Text width={'100%'}>{navLink.items[i]}</Text>
+                            </Link>
+                          </MenuItem>
+                        ))
+                      }
+                    </MenuOptionGroup>
+                    <MenuDivider />
+                  </Box>
+                  :
+                  <Box>
+                    <MenuItem key={index}>
+                      <Link to={navLink.url[0]}>
+                        <Text width={"100%"}>{navLink.name}</Text>
+                      </Link>
+                    </MenuItem>
+                    <MenuDivider />
+                  </Box>
               ))}
               <MenuItem>
                 <Text width={"100%"} onClick={toggleColorMode}>Change Theme</Text>
               </MenuItem>
+              <MenuDivider />
               <MenuItem>
                 <Text width={"100%"} onClick={handleConnectNear}>Select Wallet</Text>
               </MenuItem>

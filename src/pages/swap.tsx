@@ -9,7 +9,6 @@ export default function Swap() {
       <TitleCard title='Beta Swap' />
       <Flex justifyContent='center' >
         <Flex
-          maxWidth='lg'
           marginY='4'
           padding='8'
           shadow='lg'
