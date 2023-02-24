@@ -94,7 +94,7 @@ export class PegasusContract {
         telegram,
         in_token_account_id,
         out_token_account_id,
-        total_tokens,
+        total_tokens: total_tokens * (10 ** metadata.decimals),
         coingecko,
         facebook,
         instagram,
@@ -181,8 +181,8 @@ export class PegasusContract {
     if (BigNumber(balance) > BigNumber(0)) {
       return await ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
     } else {
-      const pegasusAccount: any = await this.near.account(this.pegasusContract.contractId);
-      await pegasusAccount.signAndSendTransaction({
+      const account: any = await this.near.account(accoun_id);
+      await account.signAndSendTransaction({
         receiverId: this.pegasusContract.contractId,
         actions: [
           ftContract!.storageDeposit(this.pegasusContract.contractId),

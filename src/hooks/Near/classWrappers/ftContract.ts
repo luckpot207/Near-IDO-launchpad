@@ -43,7 +43,7 @@ export class FtContract {
         msg: msg
       },
       gas: GAS_FOR_NFT_TRANSFER,
-      attachedDeposit: "1",
+      amount: "1",
       callbackUrl,
     });
 
@@ -53,7 +53,7 @@ export class FtContract {
       args: {
         account_id: accountId,
       },
-      attachedDeposit: STORAGE_AMOUNT,
+      amount: STORAGE_AMOUNT,
     });
 }
 

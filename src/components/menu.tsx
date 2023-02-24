@@ -51,10 +51,10 @@ export default function MenuBars({ title, items, url }: Props) {
                 >
                     {items.map((item, index) => (
                         <NavLink key={index} end to={url[index]} style={navData => ({
-                            color: navData.isActive ? "#374151" : "#9CA3AF"
+                            color: navData.isActive ? "#374151" : "#993ff4"
                         })} >
                             <MenuItem
-                                _hover={{ bg: color.progressStatus }}
+                                _hover={{ bg: color.progressStatus, color: '#fff' }}
                                 bg='#d9d9d9'
                                 textAlign='center'
                             > {item} </MenuItem>

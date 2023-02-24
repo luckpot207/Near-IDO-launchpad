@@ -32,7 +32,7 @@ export default function DateCard({ title, placeholder, required, setData }: Prop
         fontSize='18px'
         color={color.input}
         onChange={e => setData(e.target.value)}
-        type='date'
+        type='datetime-local'
       />
     </Flex>
   )

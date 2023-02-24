@@ -72,7 +72,7 @@ export default function Header() {
   const connectWallet = (
     <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
       <Text size="sm" sx={{ pr: 1 }}>
-        {isLoggedInNear ? displayAccountId : "$"}
+        {isLoggedInNear ? displayAccountId : "Connect Wallet"}
       </Text>
       {isLoggedInNear && <LogoutIcon />}
     </Button>

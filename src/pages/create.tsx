@@ -15,7 +15,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import USDT from '../assets/img/icons/usdt.svg'
 import USDC from '../assets/img/icons/disc.svg'
-import NEAR from '../assets/img/icons/near.svg'
+
 
 export default function Create() {
   const { usdtContract, config } = useNearContext();
@@ -41,8 +41,6 @@ export default function Create() {
   const [twitter, setTwitter] = useState<string>('');
   const [idoStartDate, setIdoStartDate] = useState<Date>();
   const [idoEndDate, setIdoEndDate] = useState<Date>();
-  const [depositStartDate, setDepositStartDate] = useState<Date>();
-  const [depositEndDate, setDepositEndDate] = useState<Date>();
   const [cliffPeriod, setCliffPeriod] = useState<number>(0);
   const [description, setDescription] = useState<string>('');
   const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
@@ -229,7 +227,7 @@ export default function Create() {
                 </Flex>
               </Flex>
               <Flex >
-                <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' width={'100%'} color={'white'} onClick={handleRegisterProject}>PAY</Button>
+                <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' _hover={{ bgGradient: 'linear-gradient(180deg, #9A3FF4 0%, #D5B5FF 122.97%)' }} width={'100%'} color={'white'} onClick={handleRegisterProject}>PAY</Button>
               </Flex>
             </Flex>
           </Flex>
@@ -260,7 +258,7 @@ export default function Create() {
               </Flex>
               <InputCard title='E-MAIL' placeholder='hello@johndoe.com' required={true} setData={setEmail} />
               <InputCard title='TELEGRAM CONTACT' placeholder='https://t.me/cryptonear' required={true} setData={setTelegram} />
-              <SelectCard title='CHOOSE TOKEN TICKER TO RECEIVE' placeholder='PLEASE SELECT' options={['USDT', 'USDC', 'NEAR']} required={true} setData={setToken} />
+              <SelectCard title='CHOOSE TOKEN TICKER TO RECEIVE' placeholder='PLEASE SELECT' options={['USDT', 'USDC']} required={true} setData={setToken} />
               <InputCard title='TOTAL DEPOSIT TOKEN AMOUNT(FOR LAUNCHPAD)' placeholder='0' required={true} setData={setTotalTokens} type='number' />
               <InputCard title='COINGECKO / COINMARKETCAP LINK (OPTIONAL)' placeholder='https://www.coingecko.com/en/coins/bitcoin/' required={false} setData={setCoingecko} />
               <InputCard title='FACEBOOK (OPTIONAL)' placeholder='https://www.facebook.com/projectname' required={false} setData={setFacebook} />
@@ -353,8 +351,6 @@ export default function Create() {
               </Flex>
               <DateCard title='IDO START DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setIdoStartDate} />
               <DateCard title='IDO END DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setIdoEndDate} />
-              <DateCard title='DEPOSIT START DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setDepositStartDate} />
-              <DateCard title='DEPOSIT END DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setDepositEndDate} />
               <SelectCard title='CLIFF PERIOD' placeholder='PLEASE SELECT' options={['30 DAYS (DEFAULT)', '60 DAYS (2 MONTHS)', '90 DAYS (3 MONTHS)', '365 DAYS (1 YEAR)']} required={true} setData={setCliffPeriod} />
             </Flex>
           </Flex>
@@ -390,14 +386,9 @@ export default function Create() {
               </Flex>
             </Flex>
           </Flex>
-          <Flex justifyContent='center' flexDirection='column' marginTop='8'>
-            <Text as='h3' fontSize='14px' textAlign='start'>
-              DISCLAIMER
-            </Text>
-            <Text as='h3' fontSize='14px' textAlign='start' marginY='4' color={color.placeholder}>
-              Kindly click the pay button to establish crypto payment gateway. Once payment is completed, you’ll be redirected to the confirmation page. Your submission may / may not be listed due to the nature of your project and bound to Pegasus Terms & Conditions. In the event if your submission is rejected, you get a full refund to the original addressee.
-            </Text>
-            <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' position='relative' onClick={() => setSubmitOpen(true)} color={'white'}>PAY & SUBMIT</Button>
+          <RuleCard />
+          <Flex justifyContent='end' marginTop='8'>
+            <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' _hover={{ bgGradient: 'linear-gradient(180deg, #9A3FF4 0%, #D5B5FF 122.97%)' }} position='relative' onClick={() => setSubmitOpen(true)} color={'white'} width={40}>PAY & SUBMIT</Button>
           </Flex>
         </Flex>
       )}

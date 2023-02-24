@@ -26,14 +26,14 @@ export default function ProjectDashboard() {
   const [userBalance, setUserBalance] = useState<string>('');
   const [depositBalance, setDepositBalance] = useState<number>(0);
 
-  const handleDeposit = (ftContractId: string) => {
+  const handleDeposit = (ftContractId: string, projectId: number) => {
     if (depositBalance <= 0) return;
-    // activeProject({
-    //   accountId: accountIdNear,
-    //   ftContractId,
-    //   projectId: 0,
-    //   amount: depositBalance
-    // })
+    activeProject({
+      accountId: accountIdNear,
+      ftContractId,
+      projectId: projectId,
+      amount: depositBalance
+    })
   }
 
   if (projects.isLoading || projects.isError) return (<>loading.....</>)
@@ -122,7 +122,7 @@ export default function ProjectDashboard() {
                   </Flex>
                 </Flex>
                 <Flex >
-                  <Button colorScheme={'green'} width={'100%'} color={'white'} onClick={() => handleDeposit(project.out_token_account_id)}>DEPOSIT</Button>
+                  <Button colorScheme={'green'} width={'100%'} color={'white'} onClick={() => handleDeposit(project.out_token_account_id, project.project_id)}>DEPOSIT</Button>
                 </Flex>
               </Flex>
             </Flex>
