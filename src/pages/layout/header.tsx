@@ -70,7 +70,7 @@ export default function Header() {
     accountIdNear && accountIdNear.length > 20 ? `${accountIdNear.substring(0, 19)}...` : accountIdNear;
 
   const connectWallet = (
-    <Button aria-label='$' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
+    <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
       <Text size="sm" sx={{ pr: 1 }}>
         {isLoggedInNear ? displayAccountId : "$"}
       </Text>
