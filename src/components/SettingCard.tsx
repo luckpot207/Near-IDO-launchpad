@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GridItem, Flex, Button, Grid, Box, HStack, Icon, Progress, VStack, Text, Image, Input } from "@chakra-ui/react";
 import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
 import TitleCard from "./TitleCard";
+import Loading from "./Loading";
 import { useBalance, useColor, useProject } from "../hooks";
 import { shortMonthNames } from "../utils/const";
 import { NftImageType } from '../types';
@@ -12,6 +13,7 @@ import LiveListingStar from '../assets/img/icons/live-listing-star.svg'
 import USDT from '../assets/img/icons/usdt.svg'
 
 export default function SettingCard() {
+  const navigate = useNavigate();
   const color = useColor();
   const { projectId } = useParams();
   const { project } = useProject(Number(projectId));
@@ -25,7 +27,16 @@ export default function SettingCard() {
   const [isCropped, setIsCropped] = useState<boolean>(false);
   const now = Math.floor(Date.now() / 1000);
   const icon = SettingDarkIcon;
-  if (project.isLoading || project.isError) return (<>loading.....</>)
+
+  const handleBack = () => {
+    navigate('/');
+  }
+
+  const handleDetail = () => {
+    navigate(`./project/${projectId}`);
+  }
+
+  if (project.isLoading || project.isError) return (< Loading />)
   else {
     const projectInfo = project.value;
     const startTime = (new Date(projectInfo.start_time));
@@ -33,6 +44,7 @@ export default function SettingCard() {
     const projectDuration = projectInfo.end_time - projectInfo.start_time;
     const expiredDuration = now - projectInfo.start_time;
     const progressValue = 100 * expiredDuration / projectDuration;
+
     return (
       <>
         <TitleCard title='Live Listings Panel' />
@@ -42,8 +54,9 @@ export default function SettingCard() {
               variant='ghost'
               colorScheme='purple'
               leftIcon={<ArrowLeftIcon />}
+              onClick={handleBack}
             >
-              <Link to={'/'}>Back</Link>
+              Back
             </Button>
           </Flex>
           <Grid templateColumns='repeat(3, 1fr)' gap={6}>
@@ -149,7 +162,7 @@ export default function SettingCard() {
                     minHeight='14'
                     justifyContent='center'
                   >
-                    <Button width='100%' color={color.main} ><Link to={`./project/${projectId}`}>Details</Link></Button>
+                    <Button width='100%' color={color.main} onClick={handleDetail}>Details</Button>
                   </Flex>
                 </VStack>
               </Flex>

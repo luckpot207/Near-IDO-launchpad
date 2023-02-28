@@ -45,7 +45,7 @@ function App() {
               <Route path="/account" element={<Account />} />
               <Route path="/project" element={<Project />} />
               <Route path="/swap" element={<Swap />} />
-              <Route path="/project/:projectId" element={<DetailCard />} />
+              <Route path="/detail/:projectId" element={<DetailCard />} />
               <Route path="/setting/:projectId" element={<SettingCard />} />
               <Route path="*" element={<NoPage />} />
             </Routes>
@@ -58,11 +58,3 @@ function App() {
 }
 
 export default App;
-function useState(arg0: boolean): [any, any] {
-  throw new Error("Function not implemented.");
-}
-
-function useNear() {
-  throw new Error("Function not implemented.");
-}
-

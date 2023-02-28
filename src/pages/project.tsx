@@ -16,6 +16,7 @@ import 'cropperjs/dist/cropper.css';
 import USDT from '../assets/img/icons/usdt.svg'
 import USDC from '../assets/img/icons/disc.svg'
 import NEAR from '../assets/img/icons/near.svg'
+import Loading from '../components/Loading';
 
 export default function ProjectDashboard() {
   const { isLoggedInNear, accountIdNear } = useNearLogin();
@@ -36,7 +37,7 @@ export default function ProjectDashboard() {
     })
   }
 
-  if (projects.isLoading || projects.isError) return (<>loading.....</>)
+  if (projects.isLoading || projects.isError) return (<Loading />)
   else {
     const project = projects.value[projects.value.length - 1];
     return (

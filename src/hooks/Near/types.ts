@@ -14,22 +14,6 @@ export interface SignOutcome {
     signature: string;
 }
 
-export interface NftToken {
-    contractId: string;
-    collectionId: string;
-    compositeId: string;
-    tokenId: string;
-    tokenName: string;
-    collectionName: string;
-    referenceUrl: string;
-    imageUri?: string;
-    propertyVersion?: number;
-    creator?: string;
-    description?: string;
-    maximum?: string;
-    supply?: number;
-}
-
 export interface FtToken {
     contractId: string;
     symbol: string;
@@ -76,6 +60,7 @@ export interface Project {
     start_block_height: string,
     end_block_height: string | null,
     is_activated: boolean,
+    investors: number
 }
 
 export interface RegisterProjectParameters {
