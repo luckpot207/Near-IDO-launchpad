@@ -108,13 +108,13 @@ export default function Account() {
 
             {/* OTHER LAUNCHPAD TOKENS */}
             <Flex flexDirection='column' marginY={8}>
-              {participatedProjects.length ? (
+              {notParticipatedProjects.length ? (
                 <Flex marginBottom='20px'>
                   <Text as='h1' fontSize='20px' textAlign='start' color={color.blue}>OTHER LAUNCHPAD TOKENS</Text>
                 </Flex>
               ) : (<></>)}
               <Flex flexDirection={'column'}>
-                {participatedProjects.map(project => (
+                {notParticipatedProjects.map(project => (
                   <UnparticipatedCard
                     key={project.project_id}
                     {...project}
