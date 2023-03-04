@@ -11,16 +11,13 @@ const FETCH_COUNT = 50;
 
 export class PegasusContract {
   pegasusContract: any;
-  initFtContract: Function;
   near: Near;
 
   constructor(
     pegasusContract: any,
-    initFtContract: Function,
     near: Near,
   ) {
     this.pegasusContract = pegasusContract;
-    this.initFtContract = initFtContract
     this.near = near;
   }
 
@@ -52,7 +49,8 @@ export class PegasusContract {
 
   registerProject = async (
     accoun_id: string,
-    ft_contract_id: string,
+    inTokenContract: FtContract,
+    outTokenContract: FtContract,
     title: string,
     sub_title: string,
     token_ticker: string,
@@ -74,13 +72,13 @@ export class PegasusContract {
   ) => {
 
     const projectRegisterFee = BigInt(await this.getListingFeeNear());
-    const callbackUrl = `${window.location.origin}/raffles/`;
-
-    const ftContract = new FtContract(this.initFtContract(ft_contract_id));
-    const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
-    const metadata = await ftContract!.getFtMetadata();
-    const projectRegisterValue = BigInt(20 * (10 ** metadata.decimals))
+    const callbackUrl = `${window.location.origin}/project/`;
+    const balance = await inTokenContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
+    const inTokenMetadata = await inTokenContract!.getFtMetadata();
+    const outTokenMetadata = await outTokenContract!.getFtMetadata();
+    const projectRegisterValue = (projectRegisterFee * BigInt(10 ** inTokenMetadata.decimals))
     const attachDeposit = (projectRegisterValue);
+    const totalTokens = parseNearAmount(total_tokens.toString())
 
     const msg = JSON.stringify({
       msg_type: true,
@@ -89,47 +87,45 @@ export class PegasusContract {
         sub_title,
         token_ticker,
         logo,
-        starting_price: starting_price * (10 ** metadata.decimals),
+        starting_price: starting_price * (10 ** inTokenMetadata.decimals),
         email,
         telegram,
         in_token_account_id,
         out_token_account_id,
-        total_tokens: total_tokens * (10 ** metadata.decimals),
+        total_tokens: totalTokens?.substring(0, totalTokens.length - (24 - outTokenMetadata.decimals)),
         coingecko,
         facebook,
         instagram,
         twitter,
         description,
-        start_time: (start_time * 10 ** 6).toString(),
-        end_time: (end_time * 10 ** 6).toString(),
+        start_time: (start_time * (10 ** 6)).toString(),
+        end_time: (end_time * (10 ** 6)).toString(),
         cliff_period: cliff_period.toString(),
       })
     });
 
     if (BigNumber(balance) > BigNumber(0)) {
-      return await ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
+      return await inTokenContract.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
     } else {
       const account: any = await this.near.account(accoun_id);
-      await account.signAndSendTransaction({
-        receiverId: this.pegasusContract.contractId,
-        actions: [
-          ftContract!.storageDeposit(this.pegasusContract.contractId),
-          ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl),
+      await account.signAndSendTransaction(
+        this.pegasusContract.contractId,
+        [
+          inTokenContract.storageDeposit(this.pegasusContract.contractId),
+          inTokenContract.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl),
         ],
-      });
+      );
     }
   };
 
   activeProject = async (
     accoun_id: string,
-    ft_contract_id: string,
     project_id: number,
+    ftContract: FtContract,
     amount: number
   ) => {
 
     const callbackUrl = `${window.location.origin}/projects/`;
-
-    const ftContract = new FtContract(this.initFtContract(ft_contract_id));
     const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
     const metadata = await ftContract!.getFtMetadata();
     const projectRegisterValue = BigInt(amount * (10 ** metadata.decimals))
@@ -146,8 +142,8 @@ export class PegasusContract {
       return await ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
     } else {
       const account: any = await this.near.account(accoun_id);
-      await account.signAndSendTransaction({
-        receiverId: this.pegasusContract.contractId,
+      return await account.signAndSendTransaction({
+        receiverId: ftContract.contractId,
         actions: [
           ftContract!.storageDeposit(this.pegasusContract.contractId),
           ftContract!.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl),
@@ -158,14 +154,13 @@ export class PegasusContract {
 
   projectDepositInToken = async (
     accoun_id: string,
-    ft_contract_id: string,
     project_id: number,
+    ftContract: FtContract,
     amount: number
   ) => {
 
     const callbackUrl = `${window.location.origin}/project/${project_id}`;
 
-    const ftContract = new FtContract(this.initFtContract(ft_contract_id));
     const balance = await ftContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
     const metadata = await ftContract!.getFtMetadata();
     const attachDeposit = BigInt(amount * (10 ** metadata.decimals))
@@ -196,18 +191,16 @@ export class PegasusContract {
     project_id: number,
     amount: number | null
   ) => {
-
-    const raffleCreationFee = BigInt(await this.getListingFeeNear());
-
-    const attachDeposit = (raffleCreationFee);
-    const callbackUrl = `${window.location.origin}/projects/`;
+    const callbackUrl = `${window.location.origin}`;
+    const amountBalance = parseNearAmount(amount?.toString())
 
     return await this.pegasusContract.project_withdraw_in_token({
       args: {
         project_id,
-        amount
+        amount: amountBalance?.substring(0, amountBalance.length - (24 - 6))
       },
-      amount: attachDeposit.toString(),
+      amount: 1,
+      // attachDeposit: parseNearAmount('1'),
       callbackUrl,
     });
   };

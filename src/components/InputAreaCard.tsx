@@ -4,11 +4,13 @@ import { useColor } from '../hooks';
 interface Props {
   title: string
   placeholder?: string
+  value: string | number
+  error: string | number
   required: boolean
   setData: Function
 }
 
-export default function InputAreaCard({ title, placeholder = '', required, setData }: Props) {
+export default function InputAreaCard({ title, placeholder = '', value, error, required, setData }: Props) {
   const color = useColor();
   return (
     <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='4' width='full'>
@@ -32,6 +34,8 @@ export default function InputAreaCard({ title, placeholder = '', required, setDa
         fontSize='18px'
         color={color.input}
         onChange={e => setData(e.target.value)}
+        value={value}
+        borderColor={error ? 'red' : '#ACACAC'}
       />
     </Flex>
   )

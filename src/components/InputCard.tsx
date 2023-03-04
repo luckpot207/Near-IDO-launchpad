@@ -5,16 +5,18 @@ import { directionProp } from '../utils/style';
 interface Props {
   title: string
   placeholder: string
+  value: string | number
+  error: string | number
   required: boolean
   setData: Function
   direction?: directionProp
   type?: string
 }
 
-export default function InputCard({ title, placeholder, required, setData, direction = directionProp.column, type = "text" }: Props) {
+export default function InputCard({ title, placeholder, value, error, required, setData, direction = directionProp.column, type = "text", ...style }: Props) {
   const color = useColor();
   return (
-    <Flex justifyContent='start' alignItems='center' flexDirection={direction} marginTop='4'>
+    <Flex justifyContent='start' alignItems='center' flexDirection={direction} marginTop='4' {...style}>
       <Flex width='100%' paddingLeft='2'>
         <Text as='h3' fontSize='14px' textAlign='start'>
           {title}
@@ -36,6 +38,8 @@ export default function InputCard({ title, placeholder, required, setData, direc
         color={color.input}
         onChange={e => setData(e.target.value)}
         type={type}
+        value={value}
+        borderColor={error ? 'red' : '#ACACAC'}
       />
     </Flex>
   )

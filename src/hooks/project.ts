@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { singletonHook } from "react-singleton-hook";
 import { keysToCamel } from "../utils/string";
-import { useNearLogin, useNearContext, useTxOutcome, RegisterProjectParameters } from "./Near";
+import { useNearLogin, useNearContext, useTxOutcome, RegisterProjectParameters, DepositProjectParameters } from "./Near";
 import Big from "big.js";
 import { LoadableResult, } from "../types";
 import { Project } from "./Near";
@@ -55,38 +55,22 @@ export const useProject = (projectId: number): ProjectResult => {
   };
 }
 
-export const useBalance = (projectId: number): number => {
+interface GetBalance {
+  getBalance: (projectId: number) => Promise<number>;
+}
+
+export const useBalance = (): GetBalance => {
   const { pegasusContract } = useNearContext();
   const { accountIdNear } = useNearLogin();
 
-  const projectInfo = useQuery(
-    ["fetchBalanceInfoRaw", projectId, accountIdNear],
-    async (): Promise<number | null> => {
-      const balance: number = await pegasusContract.getNumBalances(projectId, accountIdNear);
-      return balance
-    },
-    {
-      enabled: Number(projectId) >= 0,
-      cacheTime: 0,
-    }
-  );
-  const project = useMemo((): LoadableResult<number> => {
-    if (projectInfo.isLoading) {
-      return { isLoading: true, isError: false };
-    }
-    if (projectInfo.isError) {
-      return { isLoading: false, isError: true, error: `${projectInfo.error}` };
-    }
+  const getBalance = async (projectId: number) => {
+    const balance: number = await pegasusContract.getNumBalances(projectId, accountIdNear);
+    return balance
+  }
 
-    const result = projectInfo.data!;
-
-    return { isLoading: false, isError: false, value: result };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectInfo.isLoading, projectInfo.isError, projectInfo.data, projectInfo.isRefetching]);
-
-  return (project.isLoading || project.isError) ? 0 : project.value
-
+  return {
+    getBalance
+  }
 }
 
 export const useProjects = (startNum: number | null, limit: number | null): ProjectsResult => {
@@ -133,7 +117,8 @@ export const useRegisterProject = (): RegisterProject => {
     const projectId = await pegasusContract
       .registerProject(
         params.accountId,
-        params.ftContractId,
+        params.inTokenContract,
+        params.outTokenContract,
         params.title,
         params.subTitle,
         params.tokenTicker,
@@ -141,8 +126,8 @@ export const useRegisterProject = (): RegisterProject => {
         params.startingPrice,
         params.email,
         params.telegram,
-        params.inTokenAccountId,
-        params.outTokenAccountId,
+        params.inTokenId,
+        params.outTokenId,
         params.totalTokens,
         params.coingecko,
         params.facebook,
@@ -171,18 +156,20 @@ export const useRegisterProject = (): RegisterProject => {
 }
 
 interface ActiveProject {
-  activeProject: (params: { accountId: string, ftContractId: string, projectId: number, amount: number }) => Promise<number>;
+  activeProject: (
+    params: DepositProjectParameters
+  ) => Promise<number>;
 }
 
 export const useActiveProject = (): ActiveProject => {
   const { pegasusContract } = useNearContext();
 
-  const activeProject = async (params: { accountId: string, ftContractId: string, projectId: number, amount: number }): Promise<number> => {
+  const activeProject = async (params: DepositProjectParameters): Promise<number> => {
     const projectId = await pegasusContract
       .activeProject(
         params.accountId,
-        params.ftContractId,
         params.projectId,
+        params.ftContract,
         params.amount
       );
     return projectId;
@@ -194,18 +181,18 @@ export const useActiveProject = (): ActiveProject => {
 }
 
 interface ProjectDepositInToken {
-  projectDepositInToken: (params: { accountId: string, ftContractId: string, projectId: number, amount: number }) => Promise<number>;
+  projectDepositInToken: (params: DepositProjectParameters) => Promise<number>;
 }
 
 export const useDepositInToken = (): ProjectDepositInToken => {
   const { pegasusContract } = useNearContext();
 
-  const projectDepositInToken = async (params: { accountId: string, ftContractId: string, projectId: number, amount: number }): Promise<number> => {
+  const projectDepositInToken = async (params: DepositProjectParameters): Promise<number> => {
     const projectId = await pegasusContract
       .projectDepositInToken(
         params.accountId,
-        params.ftContractId,
         params.projectId,
+        params.ftContract,
         params.amount
       );
     return projectId;

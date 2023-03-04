@@ -4,13 +4,14 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Header from "./pages/layout/header";
 import Footer from "./pages/layout/footer";
 import Listings from "./pages/listings";
+import Listing from "./pages/listing";
 import Treasury from "./pages/treasury";
 import Account from "./pages/account";
 import Create from "./pages/create";
 import Swap from "./pages/swap";
 import Project from "./pages/project";
-import DetailCard from "./components/DetailCard";
-import SettingCard from "./components/SettingCard";
+import Setting from "./pages/setting";
+import Detail from "./pages/detail";
 import NoPage from "./pages/layout/404";
 import "./App.css";
 
@@ -45,8 +46,9 @@ function App() {
               <Route path="/account" element={<Account />} />
               <Route path="/project" element={<Project />} />
               <Route path="/swap" element={<Swap />} />
-              <Route path="/detail/:projectId" element={<DetailCard />} />
-              <Route path="/setting/:projectId" element={<SettingCard />} />
+              <Route path="/listing/:projectId" element={<Listing />} />
+              <Route path="/setting/:projectId" element={<Setting />} />
+              <Route path="/detail/:projectId" element={<Detail />} />
               <Route path="*" element={<NoPage />} />
             </Routes>
           </Flex>

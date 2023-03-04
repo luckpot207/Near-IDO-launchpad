@@ -4,11 +4,13 @@ import { useColor } from '../hooks';
 interface Props {
   title: string
   placeholder: string
+  value: Date | undefined
+  error: number
   required: boolean
   setData: Function
 }
 
-export default function DateCard({ title, placeholder, required, setData }: Props) {
+export default function DateCard({ title, placeholder, value, error, required, setData }: Props) {
   const color = useColor();
   return (
     <Flex justifyContent='start' alignItems='center' flexDirection='column' marginTop='4'>
@@ -33,6 +35,8 @@ export default function DateCard({ title, placeholder, required, setData }: Prop
         color={color.input}
         onChange={e => setData(e.target.value)}
         type='datetime-local'
+        // selected={value}
+        borderColor={error ? 'red' : '#ACACAC'}
       />
     </Flex>
   )

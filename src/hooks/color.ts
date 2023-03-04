@@ -33,7 +33,7 @@ export const useColor = (): ColorHookResult => {
   const logoMode = useColorModeValue(BlackLogo, WhiteLogo);
   const background = useColorModeValue("white", "brand.900");
   const required = useColorModeValue('#F43F5E', 'black')
-  const input = useColorModeValue('rock.900', 'black')
+  const input = useColorModeValue('rock.800', 'white')
   const inputbg = useColorModeValue('rock.50', 'white')
   const placeholder = useColorModeValue('rock.300', 'gray.500')
   const border = useColorModeValue('rock.100', 'white')
@@ -46,8 +46,8 @@ export const useColor = (): ColorHookResult => {
   const main = useColorModeValue('brand.500', 'white')
   const panelbg = useColorModeValue('brand.100', 'black')
   const progressStatus = useColorModeValue('rock.500', 'gray.100')
-  const yellow = useColorModeValue('#cda900','#3286ff')
-  const green = useColorModeValue('#26a17b','#d94e82')
+  const yellow = useColorModeValue('#cda900', '#3286ff')
+  const green = useColorModeValue('#26a17b', '#d94e82')
   const blue = useColorModeValue('#2079FF', '#df8600')
   const lightBlue = useColorModeValue('#76deff', '#892100')
   const lightGreen = useColorModeValue('#34d399', '#cb2c00');

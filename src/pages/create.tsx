@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Flex, Text, Input, Button, Select, Image } from '@chakra-ui/react';
+import { Flex, Text, Input, Button, Select, Image, IconButton, Menu, MenuButton, MenuItem, MenuList, MenuOptionGroup, MenuDivider, MenuItemOption } from '@chakra-ui/react';
 import { BiCrop as CropIcon, BiChevronLeft as ArrowLeftIcon, BiChevronRight as ArrowRightIcon } from 'react-icons/bi';
 import TitleCard from '../components/TitleCard';
 import InputCard from '../components/InputCard';
@@ -7,18 +7,44 @@ import InputAreaCard from '../components/InputAreaCard';
 import SelectCard from '../components/SelectCard';
 import DateCard from '../components/DateCard';
 import RuleCard from '../components/RuleCard';
-import { useColor, useRegisterProject, useNearContext, useNearLogin, RegisterProjectParameters } from '../hooks';
+import { useColor, useRegisterProject, useNearContext, useNearLogin, ProjectInput } from '../hooks';
 import { ListingDetail, NftImageType } from '../types';
 import { token1, token2 } from '../utils/tokens';
-import { payment } from '../utils/const';
+import { Payment } from '../utils/const';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import USDT from '../assets/img/icons/usdt.svg'
-import USDC from '../assets/img/icons/disc.svg'
+import USDC from '../assets/img/icons/usdc.svg'
+import InfoIcon from '../assets/img/icons/info.svg'
+import { primaryButtonStyle } from '../theme/ButtonStyles';
+import { FtContract } from '../hooks/Near/classWrappers';
+import { parseNearAmount } from 'near-api-js/lib/utils/format';
+import { AddIcon, ExternalLinkIcon, RepeatIcon, EditIcon } from '@chakra-ui/icons';
 
+const initData: ProjectInput = {
+  title: '',
+  subTitle: '',
+  outTokenId: '',
+  inTokenId: '',
+  tokenTicker: '',
+  logo: '',
+  startingPrice: 0,
+  email: '',
+  telegram: '',
+  totalTokens: 0,
+  coingecko: '',
+  facebook: '',
+  instagram: '',
+  twitter: '',
+  description: '',
+  startTime: 0,
+  endTime: 0,
+  cliffPeriod: 0,
+}
 
 export default function Create() {
-  const { usdtContract, config } = useNearContext();
+  console.log('log', parseNearAmount('2000'))
+  const { config, initFtContract } = useNearContext();
   const { isLoggedInNear, accountIdNear } = useNearLogin();
   const { registerProject } = useRegisterProject();
   const color = useColor();
@@ -26,27 +52,30 @@ export default function Create() {
   const [isCropped, setIsCropped] = useState<boolean>(false);
   const [cropperInstance, setCropperInstance] = useState<Cropper>();
   const [userBalance, setUserBalance] = useState<string>('');
-  const [title, setTitle] = useState<string>('Noname Sales');
+  const [errors, setErrors] = useState<ProjectInput>(initData);
+  const [title, setTitle] = useState<string>('');
   const [subTitle, setSubTitle] = useState<string>('');
-  const [tokenId, setTokenId] = useState<string>('');
+  const [outTokenId, setOutTokenId] = useState<string>('');
   const [tokenTicker, setTokenTicker] = useState<string>('');
   const [startingPrice, setStartingPrice] = useState<number>(0);
   const [email, setEmail] = useState<string>('');
   const [telegram, setTelegram] = useState<string>('');
-  const [token, setToken] = useState<number>(0);
+  const [inTokenId, setInTokenId] = useState<number>(0);
   const [totalTokens, setTotalTokens] = useState<number>(0);
   const [coingecko, setCoingecko] = useState<string>('');
   const [facebook, setFacebook] = useState<string>('');
   const [instagram, setInstagram] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
-  const [idoStartDate, setIdoStartDate] = useState<Date>();
-  const [idoEndDate, setIdoEndDate] = useState<Date>();
+  const [startTime, setStartTime] = useState<Date>();
+  const [endTime, setEndTime] = useState<Date>();
   const [cliffPeriod, setCliffPeriod] = useState<number>(0);
   const [description, setDescription] = useState<string>('');
   const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
   const [imageUploadUri, setImageUploadUri] = useState<string>();
   const [imageUploadBlob, setImageUploadBlob] = useState<Blob | null>(new Blob());
   const [submitOpen, setSubmitOpen] = useState<boolean>(false);
+
+  const usdContract = new FtContract(initFtContract(inTokenId === 1 ? config.usdtContractId : config.usdcContractId));
 
   const blobToBase64 = (blob: Blob) => {
     // check max. file size is not exceeded
@@ -66,18 +95,83 @@ export default function Create() {
     return base64;
   }
 
-  const handleRegisterProject = () => {
-    if (!title) { setSubmitOpen(false); return; }
+  const handleRegisterProject = async () => {
+    let error = false;
+    if (!title) {
+      errors.title = 'Empty title';
+      error = true;
+    }
+    if (!subTitle) {
+      errors.subTitle = 'Empty subtitle';
+      error = true;
+    }
+    if (!outTokenId) {
+      errors.outTokenId = 'Empty outTokenId';
+      error = true;
+    }
+    if (!tokenTicker) {
+      errors.tokenTicker = 'Empty tokenTicker';
+      error = true;
+    }
+    if (!startingPrice) {
+      errors.startingPrice = 9;
+      error = true;
+    }
+    if (!email) {
+      errors.email = 'Empty email';
+      error = true;
+    }
+    if (!telegram) {
+      errors.telegram = 'Empty telegram';
+      error = true;
+    }
+    if (!inTokenId) {
+      errors.inTokenId = 'Empty inTokenId';
+      error = true;
+    }
+    if (!totalTokens) {
+      errors.totalTokens = 9;
+      error = true;
+    }
+    if (!description) {
+      errors.description = 'Empty description';
+      error = true;
+    }
+    if (!startTime) {
+      errors.startTime = 9;
+      error = true;
+    }
+    if (!endTime) {
+      errors.endTime = 9;
+      error = true;
+    }
+    if (!cliffPeriod) {
+      errors.cliffPeriod = 9;
+      error = true;
+    }
+    if (error) {
+      setSubmitOpen(false);
+      return;
+    }
     if (!imageUploadBlob) return;
-    const logo = "blobToBase64(imageUploadBlob)";
-    if (!idoStartDate || !idoEndDate) return;
-    const startTime = Math.floor(new Date(idoStartDate).getTime() / 1000)
-    const endTime = Math.floor(new Date(idoEndDate).getTime() / 1000)
-    const wrappedCliffPeriod = cliffPeriod * (10 ** 6)
-    registerProject(
+    const logo = blobToBase64(imageUploadBlob);
+    console.log('logo, logo', logo)
+    if (!startTime || !endTime) return;
+    const startTimeStamp = Math.floor(new Date(startTime).getTime())
+    const endTimeStamp = Math.floor(new Date(endTime).getTime())
+    const period =
+      cliffPeriod == 1 ? 1 : // 30 :
+        cliffPeriod == 2 ? 60 :
+          cliffPeriod == 3 ? 90 : 365;
+    const wrappedCliffPeriod = period * 24 * 3600
+    console.log('>>>>>>>>', wrappedCliffPeriod)
+    const outFtToken = new FtContract(initFtContract(outTokenId));
+    const outDecimals = await outFtToken.getFtMetadata();
+    const res = await registerProject(
       {
         accountId: accountIdNear,
-        ftContractId: config.usdtContractId,
+        inTokenContract: usdContract,
+        outTokenContract: outFtToken,
         title,
         subTitle,
         tokenTicker,
@@ -85,28 +179,46 @@ export default function Create() {
         startingPrice,
         email,
         telegram,
-        inTokenAccountId: config.usdtContractId,
-        outTokenAccountId: tokenId,
+        inTokenId: usdContract.contractId,
+        outTokenId,
         totalTokens,
         coingecko,
         facebook,
         instagram,
         twitter,
         description,
-        startTime,
-        endTime,
+        startTime: startTimeStamp,
+        endTime: endTimeStamp,
         cliffPeriod: wrappedCliffPeriod,
       }
     )
+    console.log('Result is --> ', res);
   }
 
   const getUserBalance = async () => {
-    setUserBalance(await usdtContract.getFtBalanceOfOwnerFormatted(accountIdNear))
+    setUserBalance(await usdContract.getFtBalanceOfOwnerFormatted(accountIdNear))
   }
 
   useEffect(() => {
     if (isLoggedInNear) getUserBalance()
-  }, [isLoggedInNear])
+  }, [isLoggedInNear, usdContract])
+
+  useEffect(() => {
+    setErrors(initData)
+    if (title) setErrors({ ...errors, title: '' })
+    if (subTitle) setErrors({ ...errors, subTitle: '' })
+    if (outTokenId) setErrors({ ...errors, outTokenId: '' })
+    if (tokenTicker) setErrors({ ...errors, tokenTicker: '' })
+    if (startingPrice) setErrors({ ...errors, startingPrice: 0 })
+    if (email) setErrors({ ...errors, email: '' })
+    if (telegram) setErrors({ ...errors, telegram: '' })
+    if (inTokenId) setErrors({ ...errors, inTokenId: '' })
+    if (totalTokens) setErrors({ ...errors, totalTokens: 0 })
+    if (description) setErrors({ ...errors, description: '' })
+    if (startTime) setErrors({ ...errors, startTime: 0 })
+    if (endTime) setErrors({ ...errors, endTime: 0 })
+    if (cliffPeriod) setErrors({ ...errors, cliffPeriod: 0 })
+  }, [title, subTitle, outTokenId, tokenTicker, startingPrice, email, telegram, inTokenId, totalTokens, description, startTime, endTime, cliffPeriod])
 
   return (
     <>
@@ -137,10 +249,10 @@ export default function Create() {
               </Flex>
               <Flex alignItems='center' flexDirection='column' justifyContent='center' marginY={4}>
                 <Text as='h2' fontSize='14px' textAlign='start' color={color.fadeText} marginBottom={4}>
-                  You are about to pay 500 {payment[token]} to Pegasus for project registration and listing fee. Kindly click pay to deduct 500 {payment[token]} from your wallet
+                  You are about to pay 500 {Payment[inTokenId]} to Pegasus for project registration and listing fee. Kindly click pay to deduct 500 {Payment[inTokenId]} from your wallet
                 </Text>
                 <Text as='h2' fontSize='64px' textAlign='center' fontWeight='bold' marginY={2}>500</Text>
-                <Text as='h2' fontSize='16px' textAlign='center' >- {payment[token]} -</Text>
+                <Text as='h2' fontSize='16px' textAlign='center' >- {Payment[inTokenId]} -</Text>
               </Flex>
               <Flex alignItems='center' flexDirection='column' marginY={8}>
                 <Flex
@@ -161,13 +273,31 @@ export default function Create() {
                   <Flex>
                     <Text as='h3' fontSize='14px' fontWeight={500} textAlign='start'>{'SELECT ASSET'}</Text>
                   </Flex>
-                  <Flex justifyContent='end' flexDirection='column'>
-                    <Flex margin='5px' justifyContent='end'>
-                      <Text as='h2' fontSize='1vw' textAlign='end' marginTop='10px' width='max-content' color={color.main}>{'Tether USD'}</Text>
-                    </Flex >
-                    <Flex justifyContent='end' margin='5px'>
-                      <Image src={USDT} />
-                      <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px' color={color.black}>{payment[token]}</Text>
+                  <Flex alignItems={'center'}>
+                    <Flex justifyContent='end' flexDirection='column'>
+                      <Flex margin='5px' justifyContent='end'>
+                        <Text as='h2' fontSize='1vw' textAlign='end' marginTop='10px' width='max-content' color={color.main}>{'Tether USD'}</Text>
+                      </Flex >
+                      <Flex justifyContent='end' margin='5px'>
+                        <Image src={inTokenId == 1 ? USDT : USDC} />
+                        <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px' color={color.black}>{Payment[inTokenId]}</Text>
+                      </Flex>
+                    </Flex>
+                    <Flex>
+                      <Menu>
+                        <MenuButton
+                          as={IconButton}
+                          aria-label='Options'
+                          icon={<ArrowRightIcon />}
+                          variant='ghost'
+                        />
+                        <MenuList>
+                          <MenuOptionGroup defaultValue={inTokenId.toString()} title='Select assets' type='radio' onChange={(e) => setInTokenId(Number(e))}>
+                            <MenuItemOption value='1'>USDT</MenuItemOption>
+                            <MenuItemOption value='2'>USDC</MenuItemOption>
+                          </MenuOptionGroup>
+                        </MenuList>
+                      </Menu>
                     </Flex>
                   </Flex>
                 </Flex>
@@ -227,7 +357,7 @@ export default function Create() {
                 </Flex>
               </Flex>
               <Flex >
-                <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' _hover={{ bgGradient: 'linear-gradient(180deg, #9A3FF4 0%, #D5B5FF 122.97%)' }} width={'100%'} color={'white'} onClick={handleRegisterProject}>PAY</Button>
+                <Button width={'100%'} {...primaryButtonStyle} onClick={handleRegisterProject}>PAY</Button>
               </Flex>
             </Flex>
           </Flex>
@@ -249,21 +379,21 @@ export default function Create() {
               <Flex marginBottom='2'>
                 <Text as='h1' fontSize='20px' fontWeight='700' textAlign='start' color={color.required}>* All Fields Mandatory</Text>
               </Flex>
-              <InputCard title='PROJECT / TOKEN NAME' placeholder='E.G. PROJECT ATLAS' required={true} setData={setTitle} />
-              <InputCard title='SUB TITLE' placeholder='E.G. 2% LAUNCH SALE' required={true} setData={setSubTitle} />
-              <InputCard title='TOKEN ID' placeholder='pegasus.token.near' required={true} setData={setTokenId} />
-              <Flex>
-                <InputCard title='TOKEN TICKER' placeholder='$ TOKEN' required={true} setData={setTokenTicker} />
-                <InputCard title='STARTING PRICE (USD)' placeholder='0.1' required={true} setData={setStartingPrice} />
+              <InputCard title='PROJECT / TOKEN NAME' placeholder='E.G. PROJECT ATLAS' required={true} setData={setTitle} value={title} error={errors.title} />
+              <InputCard title='SUB TITLE' placeholder='E.G. 2% LAUNCH SALE' required={true} setData={setSubTitle} value={subTitle} error={errors.subTitle} />
+              <InputCard title='TOKEN ID' placeholder='pegasus.token.near' required={true} setData={setOutTokenId} value={outTokenId} error={errors.outTokenId} />
+              <Flex justifyContent={'space-between'}>
+                <InputCard title='TOKEN TICKER' placeholder='$ TOKEN' required={true} setData={setTokenTicker} value={tokenTicker} error={errors.tokenTicker} />
+                <InputCard title='STARTING PRICE (USD)' placeholder='0.1' required={true} setData={setStartingPrice} value={startingPrice} error={errors.startingPrice} />
               </Flex>
-              <InputCard title='E-MAIL' placeholder='hello@johndoe.com' required={true} setData={setEmail} />
-              <InputCard title='TELEGRAM CONTACT' placeholder='https://t.me/cryptonear' required={true} setData={setTelegram} />
-              <SelectCard title='CHOOSE TOKEN TICKER TO RECEIVE' placeholder='PLEASE SELECT' options={['USDT', 'USDC']} required={true} setData={setToken} />
-              <InputCard title='TOTAL DEPOSIT TOKEN AMOUNT(FOR LAUNCHPAD)' placeholder='0' required={true} setData={setTotalTokens} type='number' />
-              <InputCard title='COINGECKO / COINMARKETCAP LINK (OPTIONAL)' placeholder='https://www.coingecko.com/en/coins/bitcoin/' required={false} setData={setCoingecko} />
-              <InputCard title='FACEBOOK (OPTIONAL)' placeholder='https://www.facebook.com/projectname' required={false} setData={setFacebook} />
-              <InputCard title='INSTAGRAM (OPTIONAL)' placeholder='https://www.instagram.com/projectname' required={false} setData={setInstagram} />
-              <InputCard title='TWITTER (OPTIONAL)' placeholder='https://www.twitter.com/projectname' required={false} setData={setTwitter} />
+              <InputCard title='E-MAIL' placeholder='hello@johndoe.com' required={true} setData={setEmail} value={email} error={errors.email} />
+              <InputCard title='TELEGRAM CONTACT' placeholder='https://t.me/cryptonear' required={true} setData={setTelegram} value={telegram} error={errors.telegram} />
+              <SelectCard title='CHOOSE TOKEN TICKER TO RECEIVE' placeholder='PLEASE SELECT' options={['USDT', 'USDC']} required={true} setData={setInTokenId} value={inTokenId} error={errors.inTokenId} />
+              <InputCard title='TOTAL DEPOSIT TOKEN AMOUNT(FOR LAUNCHPAD)' placeholder='0' required={true} setData={setTotalTokens} type='number' value={totalTokens} error={errors.totalTokens} />
+              <InputCard title='COINGECKO / COINMARKETCAP LINK (OPTIONAL)' placeholder='https://www.coingecko.com/en/coins/bitcoin/' required={false} setData={setCoingecko} value={coingecko} error={errors.coingecko} />
+              <InputCard title='FACEBOOK (OPTIONAL)' placeholder='https://www.facebook.com/projectname' required={false} setData={setFacebook} value={facebook} error={errors.facebook} />
+              <InputCard title='INSTAGRAM (OPTIONAL)' placeholder='https://www.instagram.com/projectname' required={false} setData={setInstagram} value={instagram} error={errors.instagram} />
+              <InputCard title='TWITTER (OPTIONAL)' placeholder='https://www.twitter.com/projectname' required={false} setData={setTwitter} value={twitter} error={errors.twitter} />
             </Flex>
             <Flex flexDirection='column' width='30%'>
               <Flex marginBottom='2' justifyContent='flex-end'>
@@ -281,6 +411,7 @@ export default function Create() {
                         crop={(e) => { setCropperInstance(e.currentTarget.cropper); }}
                         accept={NftImageType}
                         alt='Image cropper'
+                      // maxLength={250}
                       />
                       <Button
                         colorScheme='brand'
@@ -349,46 +480,33 @@ export default function Create() {
                   )
                 }
               </Flex>
-              <DateCard title='IDO START DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setIdoStartDate} />
-              <DateCard title='IDO END DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setIdoEndDate} />
-              <SelectCard title='CLIFF PERIOD' placeholder='PLEASE SELECT' options={['30 DAYS (DEFAULT)', '60 DAYS (2 MONTHS)', '90 DAYS (3 MONTHS)', '365 DAYS (1 YEAR)']} required={true} setData={setCliffPeriod} />
+              <DateCard title='IDO START DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setStartTime} value={startTime} error={errors.startTime} />
+              <DateCard title='IDO END DATE & TIME' placeholder='PLEASE SELECT' required={true} setData={setEndTime} value={endTime} error={errors.endTime} />
+              <SelectCard title='CLIFF PERIOD' placeholder='PLEASE SELECT' options={['30 DAYS (DEFAULT)', '60 DAYS (2 MONTHS)', '90 DAYS (3 MONTHS)', '365 DAYS (1 YEAR)']} required={true} setData={setCliffPeriod} value={cliffPeriod} error={errors.cliffPeriod} />
             </Flex>
           </Flex>
           <Flex justifyContent='center' flexDirection='column'>
-            <InputAreaCard title='BRIEF DESCRIPTION OF YOUR PROJECT' required={true} setData={setDescription} />
-            <Flex justifyContent='start' alignItems='center' marginTop='4'>
-              <Flex width='100%' paddingLeft='2'>
-                <Text as='h3' fontSize='14px' textAlign='start'>
-                  {'PAYMENT (LISTING)'}
-                </Text>
-              </Flex>
-              <Flex
-                width='100%'
-                border={'1px solid'}
-                borderRadius='2xl'
-                bgColor={color.inputbg}
-                marginTop='5px'
-                alignItems='center'
-                justifyContent={'end'}
-                color={color.border}
+            <InputAreaCard title='BRIEF DESCRIPTION OF YOUR PROJECT' required={true} setData={setDescription} value={description} error={errors.description} />
+            <Flex justifyContent='start' alignItems='start' marginTop='4'>
+              <Text as='h3' fontSize='14px' textAlign='start' >
+                {'PAYMENT'}
+              </Text>
+              <Image src={InfoIcon} width={'4'} marginX={2} />
+              <Text
+                lineHeight={1}
+                marginX={4}
+                minHeight='10'
+                fontSize='40px'
+                fontWeight={700}
+                color={color.input}
               >
-                <Text
-                  minHeight='10'
-                  paddingY='2'
-                  paddingX='5'
-                  marginTop='5px'
-                  alignItems='end'
-                  fontSize='18px'
-                  color={color.input}
-                >
-                  {`500 ${payment[token]}`}
-                </Text>
-              </Flex>
+                $500.00
+              </Text>
             </Flex>
           </Flex>
           <RuleCard />
           <Flex justifyContent='end' marginTop='8'>
-            <Button bgGradient='linear-gradient(360deg, #9A3FF4 0%, #D5B5FF 122.97%)' _hover={{ bgGradient: 'linear-gradient(180deg, #9A3FF4 0%, #D5B5FF 122.97%)' }} position='relative' onClick={() => setSubmitOpen(true)} color={'white'} width={40}>PAY & SUBMIT</Button>
+            <Button width={40} position='relative' {...primaryButtonStyle} onClick={() => setSubmitOpen(true)} >PAY & SUBMIT</Button>
           </Flex>
         </Flex>
       )}

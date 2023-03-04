@@ -4,7 +4,7 @@ import { BiRightArrowAlt as ArrowRightIcon, BiChevronDown as ArrowDownIcon } fro
 import { useColor } from '../hooks';
 import RuleCard from './RuleCard';
 import { ListingDetail } from '../types/listing';
-import { shortMonthNames } from '../utils/const';
+import { ShortMonthNames } from '../utils/const';
 import liveListing from '../assets/img/icons/live-listing-small.svg'
 import cliffArrow from '../assets/img/icons/arrow-green-short.svg'
 import releaseArrow from '../assets/img/icons/arrow-green.svg'
@@ -79,7 +79,7 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                     >
                         <Flex marginX='8px' alignItems='bottom'>
                             <Text as='h5' fontSize='14px' fontWeight='500' fontFamily='DM Sans' textAlign='start' width='50%'>
-                                {startTime.getDate()} {shortMonthNames[startTime.getMonth()]} {startTime.getFullYear()}
+                                {startTime.getDate()} {ShortMonthNames[startTime.getMonth()]} {startTime.getFullYear()}
                             </Text>
                             <Flex flexDirection='column' >
                                 <Text as='h5' fontSize='14px' fontWeight='500' fontFamily='DM Sans' textAlign='center' color={color.blue}>
@@ -88,7 +88,7 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                                 <Image src={cliffArrow}></Image>
                             </Flex>
                             <Text as='h5' fontSize='14px' fontWeight='500' fontFamily='DM Sans' textAlign='end' width='50%'>
-                                {endTime.getDate()} {shortMonthNames[endTime.getMonth()]} {endTime.getFullYear()}
+                                {endTime.getDate()} {ShortMonthNames[endTime.getMonth()]} {endTime.getFullYear()}
                             </Text>
                         </Flex>
 
@@ -129,7 +129,7 @@ export default function DashBoardDetail({ title, subtitle, listing }: Props) {
                     >
                         <Flex marginX='8px' alignItems='bottom'>
                             <Text as='h5' fontSize='14px' fontWeight='500' fontFamily='DM Sans' textAlign='start' width='50%'>
-                                {startTime.getDate()} {shortMonthNames[startTime.getMonth()]} {startTime.getFullYear()}
+                                {startTime.getDate()} {ShortMonthNames[startTime.getMonth()]} {startTime.getFullYear()}
                             </Text>
                             <Flex flexDirection='column' >
                                 <Text as='h5' fontSize='14px' fontWeight='500' fontFamily='DM Sans' textAlign='center' color={color.blue}>

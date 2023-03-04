@@ -5,21 +5,24 @@ import { useNearContext, useProject } from '../hooks'
 import { useColor } from '../hooks';
 import SettingLightIcon from '../assets/img/icons/setting.svg'
 import WalletIcon from '../assets/img/icons/wallet.svg'
-import { shortMonthNames } from '../utils/const';
+import { ShortMonthNames, TimeDivision } from '../utils/const';
 import { token1 } from "../utils/tokens";
+import { FtContract } from '../hooks/Near/classWrappers';
+import { useEffect, useState } from 'react';
 
 interface Props {
   projectId: number
   title: string
   subtitle: string,
-  startTime: Date,
-  endTime: Date,
+  startTime: number,
+  endTime: number,
   progressValue: number,
   isActivated: boolean,
   totalTokens: number,
   totalDeposits: number,
   tokenTicker: string,
-  logo: string
+  logo: string,
+  outTokenId: string
 }
 
 export default function ListCard({
@@ -33,24 +36,41 @@ export default function ListCard({
   totalTokens,
   totalDeposits,
   tokenTicker,
-  logo
+  logo,
+  outTokenId
 }: Props) {
   const now = Date.now();
-  const { role } = useNearContext();
+  const { config, initFtContract, role } = useNearContext();
+  const ftContract = new FtContract(initFtContract(outTokenId));
+  const remainDuration = endTime - now;
+  const ended = endTime < now ? true : false;
+  const remainTime = new Date(remainDuration);
+  const [decimals, setDecimals] = useState<number>(6)
   const color = useColor();
   const { project } = useProject(Number(projectId));
   const navigate = useNavigate();
   let icon = role === 'admin' ? WalletIcon : SettingLightIcon;
 
   const handleWalletClick = () => {
-    role === 'admin' ? navigate(`/setting/${projectId}`) : navigate(`/detail/${projectId}`)
+    role === 'admin' ? navigate(`/setting/${projectId}`) : navigate(`/listing/${projectId}`)
   }
 
   const handleDetailClick = () => {
-    navigate(`/detail/${projectId}`)
+    navigate(`/listing/${projectId}`)
   }
 
   const mainColor = isActivated ? '#34D399' : color.main;
+
+  const getDecimals = async () => {
+    const metadata = await ftContract!.getFtMetadata();
+    setDecimals(metadata.decimals)
+    console.log(">>>>>>>>>>>", metadata.decimals)
+  }
+
+  useEffect(() => {
+    getDecimals()
+  }, [outTokenId])
+
   return (
     <Flex
       minHeight='14'
@@ -91,7 +111,7 @@ export default function ListCard({
             margin='10 0px'
           >
             <Box width='100%'>
-              <Text as='h1' fontSize='14px' textAlign='start'>Live Deposits</Text>
+              <Text as='h1' fontSize='14px' textAlign='start'>{isActivated ? 'Live Deposits' : 'Total Deposits'}</Text>
               <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{(totalDeposits / 1000000).toLocaleString()}</Text>
             </Box>
             <Flex width='100%' justifyContent='end' flexDirection='column'>
@@ -104,6 +124,9 @@ export default function ListCard({
               </Flex>
             </Flex>
           </Flex>
+          <Flex >
+            <Icon as={ArrowDownIcon} boxSize={6} color={color.black} />
+          </Flex>
           <Flex
             minWidth='100%'
             minHeight='14'
@@ -118,7 +141,7 @@ export default function ListCard({
           >
             <Box width='100%'>
               <Text as='h1' fontSize='14px' textAlign='start'>Total Tokens On Sale</Text>
-              <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{totalTokens.toLocaleString()}</Text>
+              <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{(totalTokens / (10 ** decimals)).toLocaleString()}</Text>
             </Box>
             <Flex width='100%' justifyContent='end' flexDirection='column'>
               <Flex margin='5px' justifyContent='end'>
@@ -131,78 +154,20 @@ export default function ListCard({
             </Flex>
           </Flex>
         </Show>
-        <Hide above='sm'>
-          <Flex
-            flexDirection={'column'}
-            minWidth='100%'
-            minHeight='14'
-            paddingY='4'
-            paddingX='4'
-            alignItems='center'
-            border='1px solid'
-            borderColor='rock.100'
-            borderRadius='10px'
-            bgColor='rock.50'
-            margin='10 0px'
-          >
-            <Box width='100%'>
-              <Text as='h1' fontSize='14px' textAlign='start'>Live Deposits</Text>
-              <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{totalDeposits.toLocaleString()}</Text>
-            </Box>
-            <Flex width='100%' justifyContent='end' flexDirection='column'>
-              <Flex margin='5px' justifyContent='end'>
-                <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{token1.name}</Text>
-              </Flex >
-              <Flex justifyContent='end' margin='5px'>
-                <Image src={token1.icon} />
-                <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{token1.symbol}</Text>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex
-            flexDirection={'column'}
-            minWidth='100%'
-            minHeight='14'
-            paddingY='4'
-            paddingX='4'
-            alignItems='center'
-            border='1px solid'
-            borderColor='rock.100'
-            borderRadius='10px'
-            bgColor='rock.50'
-            margin='10 0px'
-          >
-            <Box width='100%'>
-              <Text as='h1' fontSize='14px' textAlign='start'>Total Tokens On Sale</Text>
-              <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{totalTokens.toLocaleString()}</Text>
-            </Box>
-            <Flex width='100%' justifyContent='end' flexDirection='column'>
-              <Flex margin='5px' justifyContent='end'>
-                <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{title}</Text>
-              </Flex >
-              <Flex justifyContent='end' margin='5px'>
-                <Image src={logo} />
-                <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{tokenTicker}</Text>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Hide>
-        <Flex >
-          <Icon as={ArrowDownIcon} boxSize={8} color={color.black} />
-        </Flex>
-
         <Flex
           minWidth='100%'
           minHeight='14'
           flexDirection='column'
         >
-          <Progress hasStripe value={progressValue} minWidth='100%' />
-          <Flex minWidth='100%'>
-            <Text as='h5' fontSize='10px' textAlign='start' width='50%'>
-              {shortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
+          <Flex width='100%' justifyContent={'center'} marginY={2}>
+            <Text as='h5' fontSize='18px' textAlign='center' color={isActivated ? '#26A17B' : '#ACACAC'}>
+              {isActivated ? 'SALE IS LIVE' : 'SALE ENDED'}
             </Text>
-            <Text as='h5' fontSize='10px' textAlign='end' width='50%'>
-              {shortMonthNames[endTime.getMonth()]} {endTime.getDate()}, {endTime.getFullYear()}
+          </Flex>
+          <Progress hasStripe value={progressValue} minWidth='100%' />
+          <Flex width='100%' justifyContent={'center'} marginY={2}>
+            <Text as='h5' fontSize='18px' textAlign='center' >
+              {ended ? 'Closed' : `Ending in ${remainTime.getUTCDate() - 1} days ${remainTime.getUTCHours()} hours ${remainTime.getUTCMinutes()} mins`}
             </Text>
           </Flex>
         </Flex>
@@ -213,7 +178,7 @@ export default function ListCard({
         >
           <Button width='100%' color={mainColor} border={'1px solid'} borderColor={mainColor} onClick={handleDetailClick}>{isActivated ? 'DEPOSIT' : 'DETAILS'}</Button>
         </Flex>
-      </VStack>
-    </Flex>
+      </VStack >
+    </Flex >
   )
 }

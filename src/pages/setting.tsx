@@ -3,10 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GridItem, Flex, Button, Grid, Box, HStack, Icon, Progress, VStack, Text, Image, Input } from "@chakra-ui/react";
 import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
-import TitleCard from "./TitleCard";
-import Loading from "./Loading";
+import TitleCard from "../components/TitleCard";
+import Loading from "../components/Loading";
 import { useBalance, useColor, useProject } from "../hooks";
-import { shortMonthNames } from "../utils/const";
+import { ShortMonthNames } from "../utils/const";
 import { NftImageType } from '../types';
 import SettingDarkIcon from '../assets/img/icons/settingOff.svg'
 import LiveListingStar from '../assets/img/icons/live-listing-star.svg'
@@ -17,7 +17,8 @@ export default function SettingCard() {
   const color = useColor();
   const { projectId } = useParams();
   const { project } = useProject(Number(projectId));
-  const userBalance = useBalance(Number(projectId));
+  const { getBalance } = useBalance();
+  const userBalance = getBalance(Number(projectId));
   const [editDetail, setEditDetail] = useState<boolean>(true);
   const fileUploadInputRef = useRef<HTMLInputElement | null>(null);
   const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
@@ -29,7 +30,7 @@ export default function SettingCard() {
   const icon = SettingDarkIcon;
 
   const handleBack = () => {
-    navigate('/');
+    navigate(-1);
   }
 
   const handleDetail = () => {
@@ -150,10 +151,10 @@ export default function SettingCard() {
                     <Progress hasStripe value={progressValue} minWidth='100%' />
                     <Flex minWidth='100%'>
                       <Text as='h5' fontSize='10px' textAlign='start' width='50%'>
-                        {shortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
+                        {ShortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
                       </Text>
                       <Text as='h5' fontSize='10px' textAlign='end' width='50%'>
-                        {shortMonthNames[endTime.getMonth()]} {endTime.getDate()}, {endTime.getFullYear()}
+                        {ShortMonthNames[endTime.getMonth()]} {endTime.getDate()}, {endTime.getFullYear()}
                       </Text>
                     </Flex>
                   </Flex>

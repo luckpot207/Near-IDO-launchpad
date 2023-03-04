@@ -1,7 +1,7 @@
 import { Box, Flex, Text, Image, VStack, Progress, Button, Divider } from "@chakra-ui/react";
 import Arrow from "../assets/img/icons/arrow-down.svg"
 import { ListingDetail } from "../types/listing";
-import { shortMonthNames } from "../utils/const";
+import { ShortMonthNames } from "../utils/const";
 
 interface Props {
   listing: ListingDetail,
@@ -91,10 +91,10 @@ export default function CreationCard({ listing, tokenName }: Props) {
         >
           <Flex minWidth='100%'>
             <Text as='h5' fontSize='10px' textAlign='start' width='50%'>
-              {shortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
+              {ShortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
             </Text>
             <Text as='h5' fontSize='10px' textAlign='end' width='50%'>
-              {shortMonthNames[endTime.getMonth()]} {endTime.getDate()}, {endTime.getFullYear()}
+              {ShortMonthNames[endTime.getMonth()]} {endTime.getDate()}, {endTime.getFullYear()}
             </Text>
           </Flex>
           <Progress hasStripe value={listing.progress} minWidth='100%' />

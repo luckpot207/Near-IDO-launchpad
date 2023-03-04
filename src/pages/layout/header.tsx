@@ -13,20 +13,17 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  useColorModeValue,
   Show,
   Hide,
-  MenuGroup,
   MenuDivider,
-  MenuIcon,
   MenuOptionGroup
 } from "@chakra-ui/react"
 import { BiLogOut as LogoutIcon } from 'react-icons/bi'
-// import Dropdown from 'react-bootstrap/Dropdown';
 import { useColor } from "../../hooks";
 import Menubar from "../../components/menu";
 import { useNearLogin } from "../../hooks/Near";
-import { AddIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { primaryButtonStyle } from "../../theme/ButtonStyles";
 
 
 const NAV_LINKS = [
@@ -70,7 +67,7 @@ export default function Header() {
     accountIdNear && accountIdNear.length > 20 ? `${accountIdNear.substring(0, 19)}...` : accountIdNear;
 
   const connectWallet = (
-    <Button aria-label='Connect Wallet' colorScheme='purple' variant='solid' onClick={handleConnectNear}>
+    <Button aria-label='Connect Wallet' {...primaryButtonStyle} onClick={handleConnectNear}>
       <Text size="sm" sx={{ pr: 1 }}>
         {isLoggedInNear ? displayAccountId : "Connect Wallet"}
       </Text>

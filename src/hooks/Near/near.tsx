@@ -15,8 +15,8 @@ export interface INearContext {
     config: NearAppConfig;
     walletConnection: MultiWalletConnection;
     keyStore: any;
-    pegasusContract: PegasusContract
-    usdtContract: FtContract
+    pegasusContract: PegasusContract,
+    initFtContract: Function,
     selector: WalletSelector;
     modal: WalletSelectorModal;
     wallet: SelectorAccount;
@@ -32,7 +32,7 @@ export async function InitNearContext(): Promise<INearContext> {
 
     const walletSelector = await setupSelector(nearConfig);
 
-    const pegasusContract: any = await new Contract(
+    const pegasusContract: any = new Contract(
         walletSelector.wallet,
         nearConfig.pegasusContractId,
         {
@@ -45,8 +45,8 @@ export async function InitNearContext(): Promise<INearContext> {
                 "get_listing_fee_denominator",
             ],
             changeMethods: [
-                "register_project",
                 "set_listing_fee_denominator",
+                "project_withdraw_in_token"
             ],
         }
     );
@@ -57,8 +57,6 @@ export async function InitNearContext(): Promise<INearContext> {
             changeMethods: ["ft_transfer_call", "storage_deposit"],
         });
     };
-
-    const usdtContract = new FtContract(initFtContract(nearConfig.usdtContractId));
 
     const keyStore = new keyStores.BrowserLocalStorageKeyStore();
 
@@ -73,10 +71,9 @@ export async function InitNearContext(): Promise<INearContext> {
         keyStore,
         pegasusContract: new PegasusContract(
             pegasusContract,
-            initFtContract,
             near
         ),
-        usdtContract,
+        initFtContract,
         selector: walletSelector.selector,
         modal: walletSelector.modal,
         wallet: walletSelector.wallet,
