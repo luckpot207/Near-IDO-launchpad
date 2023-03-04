@@ -64,16 +64,17 @@ export default function ProjectDashboard() {
   if (projects.isLoading || projects.isError) return (<Loading />)
   else {
     const userProjects = projects.value.filter(project => project.owner_id === accountIdNear)
-    getDecimals(userProjects[projectId].out_token_account_id);
-    const activate = !depositBalance || !isLoggedInNear ? false : true;
-    const inTokenDecimals =
-      userProjects[projectId].in_token_account_id === config.usdcContractId ? TokenDecimals.usdc :
-        userProjects[projectId].in_token_account_id === config.usdtContractId ? TokenDecimals.usdt : TokenDecimals.near;
-    const startTime = new Date(userProjects[projectId].start_time / TimeDivision);
-    const endTime = new Date(userProjects[projectId].end_time / TimeDivision);
+    console.log('project is ............', projects.value)
+    if (userProjects.length) {
+      getDecimals(userProjects[projectId].out_token_account_id);
+      const activate = !depositBalance || !isLoggedInNear ? false : true;
+      const inTokenDecimals =
+        userProjects[projectId].in_token_account_id === config.usdcContractId ? TokenDecimals.usdc :
+          userProjects[projectId].in_token_account_id === config.usdtContractId ? TokenDecimals.usdt : TokenDecimals.near;
+      const startTime = new Date(userProjects[projectId].start_time / TimeDivision);
+      const endTime = new Date(userProjects[projectId].end_time / TimeDivision);
 
-    if (isLoggedInNear) getUserBalance(userProjects[projectId].out_token_account_id)
-    if (userProjects.length > 0) {
+      if (isLoggedInNear) getUserBalance(userProjects[projectId].out_token_account_id)
       return (
         <>
           <TitleCard title={submitOpen ? 'Listing Confirmation' : 'Project Dashboard'} />
