@@ -47,6 +47,10 @@ export class PegasusContract {
     return await this.pegasusContract.get_listing_fee_denominator();
   };
 
+  getAstroDaoAccount = async (): Promise<string> => {
+    return await this.pegasusContract.get_astrodao_account();
+  };
+
   registerProject = async (
     accoun_id: string,
     inTokenContract: FtContract,

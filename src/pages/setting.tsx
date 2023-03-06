@@ -5,16 +5,21 @@ import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
 import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
 import TitleCard from "../components/TitleCard";
 import Loading from "../components/Loading";
-import { useBalance, useColor, useProject } from "../hooks";
-import { ShortMonthNames } from "../utils/const";
+import { useBalance, useColor, useNearContext, useProject } from "../hooks";
+import { ShortMonthNames, TimeDivision, TokenDecimals } from "../utils/const";
 import { NftImageType } from '../types';
 import SettingDarkIcon from '../assets/img/icons/settingOff.svg'
 import LiveListingStar from '../assets/img/icons/live-listing-star.svg'
 import USDT from '../assets/img/icons/usdt.svg'
+import ParticipatedCard from "../components/ParticipatedCard";
+import InfoCard from "../components/InfoCard";
+import { FtContract } from "../hooks/Near/classWrappers";
+import ListCard from "../components/ListCard";
 
 export default function SettingCard() {
   const navigate = useNavigate();
   const color = useColor();
+  const { config, initFtContract } = useNearContext();
   const { projectId } = useParams();
   const { project } = useProject(Number(projectId));
   const { getBalance } = useBalance();
@@ -26,7 +31,8 @@ export default function SettingCard() {
   const [imageUploadBlob, setImageUploadBlob] = useState<Blob | null>(new Blob());
   const [cropperInstance, setCropperInstance] = useState<Cropper>();
   const [isCropped, setIsCropped] = useState<boolean>(false);
-  const now = Math.floor(Date.now() / 1000);
+  const [decimals, setDecimals] = useState<number>(10 ** 6)
+  const now = Date.now();
   const icon = SettingDarkIcon;
 
   const handleBack = () => {
@@ -37,14 +43,27 @@ export default function SettingCard() {
     navigate(`./project/${projectId}`);
   }
 
+  const getDecimals = async (contractId: string) => {
+    const ftContract = new FtContract(initFtContract(contractId));
+    const metadata = await ftContract!.getFtMetadata();
+    setDecimals(10 ** metadata.decimals)
+  }
+
   if (project.isLoading || project.isError) return (< Loading />)
   else {
-    const projectInfo = project.value;
-    const startTime = (new Date(projectInfo.start_time));
-    const endTime = (new Date(projectInfo.end_time));
-    const projectDuration = projectInfo.end_time - projectInfo.start_time;
-    const expiredDuration = now - projectInfo.start_time;
+    getDecimals(project.value.out_token_account_id);
+    const inTokenDecimals =
+      project.value.in_token_account_id == config.usdcContractId ? TokenDecimals.usdc :
+        project.value.in_token_account_id == config.usdtContractId ? TokenDecimals.usdt : TokenDecimals.near;
+
+    const startTime = project.value.start_time / TimeDivision;
+    const endTime = project.value.end_time / TimeDivision;
+    const projectDuration = project.value.end_time / TimeDivision - project.value.start_time / TimeDivision;
+    const expiredDuration = now - project.value.start_time / TimeDivision;
     const progressValue = 100 * expiredDuration / projectDuration;
+    const ended = project.value.end_time / TimeDivision < now ? true : false;
+    const isActivated = project.value.end_time / TimeDivision < Date.now() || !project.value.is_activated ? false : true;
+    // const estimatedTokenPurchased = (project.value.total_tokens * userDepositedBalance / project.value.total_deposits) / decimals;
 
     return (
       <>
@@ -61,113 +80,20 @@ export default function SettingCard() {
             </Button>
           </Flex>
           <Grid templateColumns='repeat(3, 1fr)' gap={6}>
-            <GridItem colSpan={1}>
-              <Flex
-                minHeight='14'
-                minWidth='12'
-                shadow='lg'
-                paddingY='4'
-                paddingX='8'
-                alignItems='center'
-                border='1px solid'
-                borderColor={color.cardBorder}
-                borderRadius='20px'
-                flexDirection='column'
-                position='relative'
-              >
-                <HStack justifyContent={'space-between'} width={'100%'} marginY={4}>
-                  <Flex flexDirection='column' justifyContent={'flex-start'}>
-                    <Text as='h1' fontSize='20px' textAlign='start'>{projectInfo.title}</Text>
-                    <Text as='h2' fontSize='14px' textAlign='start'>{projectInfo.sub_title}</Text>
-                  </Flex>
-                  <Flex justifyContent={'flex-end'}>
-                    <Button bg='transparent' padding={0}>
-                      <Image src={icon} />
-                    </Button>
-                  </Flex>
-                </HStack>
-                <VStack width='100%' spacing='24px'>
-                  <Flex
-                    minWidth='100%'
-                    minHeight='14'
-                    paddingY='4'
-                    paddingX='4'
-                    alignItems='center'
-                    border='1px solid'
-                    borderColor='rock.100'
-                    borderRadius='10px'
-                    bgColor='rock.50'
-                    margin='10 0px'
-                  >
-                    <Box width='100%'>
-                      <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
-                      <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{projectInfo.total_tokens.toLocaleString()}</Text>
-                    </Box>
-                    <Flex width='100%' justifyContent='end' flexDirection='column'>
-                      <Flex margin='5px' justifyContent='end'>
-                        <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{projectInfo.title}</Text>
-                      </Flex >
-                      <Flex justifyContent='end' margin='5px'>
-                        <Image src={projectInfo.logo} />
-                        <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{projectInfo.token_ticker}</Text>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                  <Flex
-                    minWidth='100%'
-                    minHeight='14'
-                    paddingY='4'
-                    paddingX='4'
-                    alignItems='center'
-                    border='1px solid'
-                    borderColor='rock.100'
-                    borderRadius='10px'
-                    bgColor='rock.50'
-                    margin='10 0px'
-                  >
-                    <Box width='100%'>
-                      <Text as='h1' fontSize='14px' textAlign='start'>Current Deposits</Text>
-                      <Text as='h2' fontSize='18px' textAlign='start' marginTop='10px'>{projectInfo.total_deposits.toLocaleString()}</Text>
-                    </Box>
-                    <Flex width='100%' justifyContent='end' flexDirection='column'>
-                      <Flex margin='5px' justifyContent='end'>
-                        <Text fontSize='0.7vw' textAlign='end' marginTop='10px' width='max-content'>{'Tether USD'}</Text>
-                      </Flex >
-                      <Flex justifyContent='end' margin='5px'>
-                        <Image src={USDT} />
-                        <Text as='h1' fontSize='16px' textAlign='end' marginLeft='15px'>{'USDT.e'}</Text>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                  <Flex >
-                    <Icon as={ArrowDownIcon} boxSize={8} color={color.black} />
-                  </Flex>
-
-                  <Flex
-                    minWidth='100%'
-                    minHeight='14'
-                    flexDirection='column'
-                  >
-                    <Progress hasStripe value={progressValue} minWidth='100%' />
-                    <Flex minWidth='100%'>
-                      <Text as='h5' fontSize='10px' textAlign='start' width='50%'>
-                        {ShortMonthNames[startTime.getMonth()]} {startTime.getDate()}, {startTime.getFullYear()}
-                      </Text>
-                      <Text as='h5' fontSize='10px' textAlign='end' width='50%'>
-                        {ShortMonthNames[endTime.getMonth()]} {endTime.getDate()}, {endTime.getFullYear()}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex
-                    minWidth='100%'
-                    minHeight='14'
-                    justifyContent='center'
-                  >
-                    <Button width='100%' color={color.main} onClick={handleDetail}>Details</Button>
-                  </Flex>
-                </VStack>
-              </Flex>
-            </GridItem>
+            <ListCard
+              projectId={project.value.project_id}
+              title={project.value.title}
+              subtitle={project.value.sub_title}
+              startTime={startTime}
+              endTime={endTime}
+              progressValue={progressValue}
+              isActivated={isActivated}
+              totalTokens={project.value.total_tokens}
+              totalDeposits={project.value.total_deposits}
+              tokenTicker={project.value.token_ticker}
+              logo={project.value.logo}
+              outTokenId={project.value.out_token_account_id}
+            />
             <GridItem colSpan={2}>
               <Flex
                 minHeight='14'
@@ -246,7 +172,7 @@ export default function SettingCard() {
                         minWidth='100%'
                         maxHeight='30px'
                         borderRadius='12px'
-                        placeholder='STARLUX'
+                        placeholder={project.value.title}
                         bgColor={color.background}
                         shadow='lg'
                         fontSize='14px'
@@ -261,7 +187,7 @@ export default function SettingCard() {
                         minWidth='100%'
                         maxHeight='30px'
                         borderRadius='12px'
-                        placeholder='1% IDO OFFERINGS'
+                        placeholder={project.value.sub_title}
                         bgColor={color.background}
                         fontSize='14px'
                         disabled={editDetail}
@@ -287,7 +213,7 @@ export default function SettingCard() {
                           minWidth='100%'
                           maxHeight='30px'
                           borderRadius='12px'
-                          placeholder='$STAR'
+                          placeholder={project.value.token_ticker}
                           bgColor={color.background}
                           fontSize='14px'
                           disabled={editDetail}
@@ -302,7 +228,7 @@ export default function SettingCard() {
                           minWidth='100%'
                           maxHeight='30px'
                           borderRadius='12px'
-                          placeholder='PAID'
+                          placeholder={project.value.is_activated ? 'PAID' : 'UNPAID'}
                           bgColor={color.background}
                           fontSize='14px'
                           disabled={editDetail}
@@ -314,7 +240,7 @@ export default function SettingCard() {
                           minWidth='100%'
                           maxHeight='30px'
                           borderRadius='12px'
-                          placeholder='0.25'
+                          placeholder={(project.value.starting_price / inTokenDecimals).toString()}
                           bgColor={color.background}
                           fontSize='14px'
                           disabled={editDetail}
@@ -329,7 +255,7 @@ export default function SettingCard() {
                           minWidth='100%'
                           maxHeight='30px'
                           borderRadius='12px'
-                          placeholder='8 FEB 2023, 00:00'
+                          placeholder={`${new Date(startTime).toLocaleDateString()} ${new Date(startTime).toLocaleTimeString()}`}
                           bgColor={color.background}
                           fontSize='14px'
                           disabled={editDetail}
@@ -341,34 +267,7 @@ export default function SettingCard() {
                           minWidth='100%'
                           maxHeight='30px'
                           borderRadius='12px'
-                          placeholder='14 FEB 2023, 23:59'
-                          bgColor={color.background}
-                          fontSize='14px'
-                          disabled={editDetail}
-                        ></Input>
-                      </Flex>
-                    </Flex>
-                    {/* Group 4 */}
-                    <Flex marginBottom='13px'>
-                      <Flex flexDirection='column' marginRight='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >DEOPSIT START DATE & TIME*</Text>
-                        <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder='1 FEB 2023, 00:00'
-                          bgColor={color.background}
-                          fontSize='14px'
-                          disabled={editDetail}
-                        ></Input>
-                      </Flex>
-                      <Flex flexDirection='column' marginLeft='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >DEPOSIT END DATE & TIME*</Text>
-                        <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder='7 FEB 2023, 23:59'
+                          placeholder={`${new Date(endTime).toLocaleDateString()} ${new Date(endTime).toLocaleTimeString()}`}
                           bgColor={color.background}
                           fontSize='14px'
                           disabled={editDetail}
@@ -386,8 +285,8 @@ export default function SettingCard() {
                   alignItems='center'
                 >
                   {editDetail ? (
-                    <Box maxWidth='90%' bgColor={color.background} position='relative'>
-                      <Image src={LiveListingStar} padding='28px'></Image>
+                    <Box width='90%' bgColor={color.background} position='relative'>
+                      <Image src={project.value.logo} padding='28px' width={'100%'}></Image>
                     </Box>
                   ) : (
                     <Box maxWidth='90%' bgColor={color.background} position='relative' >

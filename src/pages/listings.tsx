@@ -1,14 +1,12 @@
 import { Box, Flex, Grid, Text } from "@chakra-ui/react";
-import { useState } from 'react';
 import ListCard from '../components/ListCard';
 import TitleCard from '../components/TitleCard';
 import Loading from "../components/Loading";
-import { useColor, useProjects } from '../hooks';
+import { useProjects } from '../hooks';
 import { TimeDivision } from "../utils/const";
 
 
 export default function Listings() {
-  const [settingOpen, setSettingOpen] = useState<boolean>(false);
   const { projects } = useProjects(null, null);
 
   return (

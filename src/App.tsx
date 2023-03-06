@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { useNearContext } from "./hooks";
 import Header from "./pages/layout/header";
 import Footer from "./pages/layout/footer";
 import Listings from "./pages/listings";
@@ -14,6 +15,7 @@ import Setting from "./pages/setting";
 import Detail from "./pages/detail";
 import NoPage from "./pages/layout/404";
 import "./App.css";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,7 +26,12 @@ const queryClient = new QueryClient({
   },
 });
 
+
 function App() {
+  const { role } = useNearContext()
+
+  console.log('role is', role)
+
   return (
     <div className="App">
       <Router>

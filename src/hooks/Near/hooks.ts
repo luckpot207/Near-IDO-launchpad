@@ -16,10 +16,20 @@ export const NearContext = createContext<INearContext | null>(null);
 
 export const useNearContext = (onSignOut?: () => Promise<void>): INearContext => {
     const [walletConnection, setWalletConnection] = useState<MultiWalletConnection | null>(null);
+    const [role, setRole] = useState<string>('user');
     const context = useContext(NearContext);
     if (context === null) {
         throw new Error("useNear must be used within a NearProvider.");
     }
+
+    const getRole = async () => {
+        const astroAccountId = await context.pegasusContract.getAstroDaoAccount();
+        setRole(astroAccountId)
+    }
+
+    useEffect(() => {
+        getRole()
+    }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -54,6 +64,7 @@ export const useNearContext = (onSignOut?: () => Promise<void>): INearContext =>
     return {
         ...context,
         walletConnection: walletConnection || context.walletConnection,
+        role: role
     };
 };
 

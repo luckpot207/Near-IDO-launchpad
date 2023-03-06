@@ -43,6 +43,7 @@ export async function InitNearContext(): Promise<INearContext> {
                 "get_num_balances",
                 "get_listing_fee_near",
                 "get_listing_fee_denominator",
+                "get_astrodao_account",
             ],
             changeMethods: [
                 "set_listing_fee_denominator",
