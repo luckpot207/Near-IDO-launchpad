@@ -1,9 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useQuery } from "react-query";
-import { singletonHook } from "react-singleton-hook";
-import { keysToCamel } from "../utils/string";
 import { useNearLogin, useNearContext, useTxOutcome, RegisterProjectParameters, DepositProjectParameters } from "./Near";
-import Big from "big.js";
 import { LoadableResult, } from "../types";
 import { Project } from "./Near";
 
@@ -16,8 +13,6 @@ interface ProjectsResult {
   projects: LoadableResult<Project[]>;
   reload: () => void;
 }
-
-const OneWeek = 7 * 24 * 60 * 60 * 1000;
 
 export const useProject = (projectId: number): ProjectResult => {
   const { pegasusContract } = useNearContext();
@@ -121,7 +116,6 @@ export const useRegisterProject = (): RegisterProject => {
         params.outTokenContract,
         params.title,
         params.subTitle,
-        params.tokenTicker,
         params.logo,
         params.startingPrice,
         params.email,

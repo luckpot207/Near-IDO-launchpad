@@ -57,7 +57,6 @@ export class PegasusContract {
     outTokenContract: FtContract,
     title: string,
     sub_title: string,
-    token_ticker: string,
     logo: string,
     starting_price: number,
     email: string,
@@ -89,7 +88,7 @@ export class PegasusContract {
       msg_data: JSON.stringify({
         title,
         sub_title,
-        token_ticker,
+        token_ticker:'t',
         logo,
         starting_price: starting_price * (10 ** inTokenMetadata.decimals),
         email,

@@ -70,7 +70,6 @@ export interface ProjectInput {
   subTitle: string,
   outTokenId: string,
   inTokenId: string,
-  tokenTicker: string,
   logo: string,
   startingPrice: number,
   email: string,
