@@ -11,6 +11,7 @@ import {
   MenuList,
   MenuOptionGroup,
   MenuItemOption,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   BiCrop as CropIcon,
@@ -777,7 +778,19 @@ export default function Create() {
               <Text as="h3" fontSize="14px" textAlign="start">
                 {"PAYMENT"}
               </Text>
-              <Image src={InfoIcon} width={"4"} marginX={2} />
+              <Tooltip
+                hasArrow
+                placement="auto-start"
+                padding={3}
+                width={"60%"}
+                label="This is a one time listing fee payable to Pegasus Launchpad. Please read disclaimer and terms & conditions"
+                aria-label="A tooltip"
+                bg={"#10B981"}
+                fontSize={"12px"}
+                closeOnClick={false}
+              >
+                <Image src={InfoIcon} width={"4"} marginX={2} />
+              </Tooltip>
               <Text
                 lineHeight={1}
                 marginX={4}
