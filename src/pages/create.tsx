@@ -62,11 +62,12 @@ const initData: ProjectInput = {
 };
 
 export default function Create() {
-  const { config, initFtContract } = useNearContext();
+  const { config, initFtContract, pegasusContract } = useNearContext();
   const { isLoggedInNear, accountIdNear } = useNearLogin();
   const { registerProject } = useRegisterProject();
   const color = useColor();
   const fileUploadInputRef = useRef<HTMLInputElement | null>(null);
+  const [listingFee, setListingFee] = useState<number>(0);
   const [isCropped, setIsCropped] = useState<boolean>(false);
   const [cropperInstance, setCropperInstance] = useState<Cropper>();
   const [userBalance, setUserBalance] = useState<string>("");
@@ -77,7 +78,7 @@ export default function Create() {
   const [startingPrice, setStartingPrice] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
   const [telegram, setTelegram] = useState<string>("");
-  const [inTokenId, setInTokenId] = useState<number>(0);
+  const [inTokenId, setInTokenId] = useState<number>(1);
   const [totalTokens, setTotalTokens] = useState<number>(0);
   const [coingecko, setCoingecko] = useState<string>("");
   const [facebook, setFacebook] = useState<string>("");
@@ -108,7 +109,7 @@ export default function Create() {
     reader.readAsDataURL(blob);
 
     reader.onload = () => {
-      console.log(reader.result); //base64encoded string
+      // console.log(reader.result); //base64encoded string
       base64 = reader.result ?? "";
     };
     reader.onerror = (error) => {
@@ -174,7 +175,6 @@ export default function Create() {
     }
     if (!imageUploadBlob) return;
     const logo = blobToBase64(imageUploadBlob);
-    console.log("logo, logo", logo);
     if (!startTime || !endTime) return;
     const startTimeStamp = Math.floor(new Date(startTime).getTime());
     const endTimeStamp = Math.floor(new Date(endTime).getTime());
@@ -218,9 +218,17 @@ export default function Create() {
     );
   };
 
+  const getListingFee = async () => {
+    setListingFee(await pegasusContract.getListingFee());
+  };
+
   useEffect(() => {
     if (isLoggedInNear) getUserBalance();
   }, [isLoggedInNear, inTokenContract]);
+
+  useEffect(() => {
+    getListingFee();
+  }, []);
 
   useEffect(() => {
     setErrors(initData);
@@ -381,8 +389,12 @@ export default function Create() {
                             type="radio"
                             onChange={(e) => setInTokenId(Number(e))}
                           >
-                            <MenuItemOption value="1">USDT</MenuItemOption>
-                            <MenuItemOption value="2">USDC</MenuItemOption>
+                            <MenuItemOption value={config.usdtContractId}>
+                              USDT
+                            </MenuItemOption>
+                            <MenuItemOption value={config.usdcContractId}>
+                              USDC
+                            </MenuItemOption>
                           </MenuOptionGroup>
                         </MenuList>
                       </Menu>
@@ -440,7 +452,7 @@ export default function Create() {
                     {"DEDUCTING"}
                   </Text>
                   <Text as="h2" fontSize="18px" textAlign="end" color={"red"}>
-                    {"-$500"}
+                    {`-$${listingFee}`}
                   </Text>
                 </Flex>
                 <Flex
@@ -467,7 +479,7 @@ export default function Create() {
                     {"BALANCE TO UPDATE"}
                   </Text>
                   <Text as="h2" fontSize="18px" textAlign="end" color={"blue"}>
-                    {Number(userBalance) - 500}
+                    {Number(userBalance) - listingFee}
                   </Text>
                 </Flex>
               </Flex>

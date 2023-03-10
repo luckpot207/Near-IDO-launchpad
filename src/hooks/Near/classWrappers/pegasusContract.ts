@@ -39,8 +39,8 @@ export class PegasusContract {
     return await this.pegasusContract.get_num_balances({ project_id, account_id });
   };
 
-  getListingFeeNear = async (): Promise<number> => {
-    return await this.pegasusContract.get_listing_fee_near();
+  getListingFee = async (): Promise<number> => {
+    return await this.pegasusContract.get_listing_fee();
   };
 
   getListingFeeDenominator = async (): Promise<number> => {
@@ -73,8 +73,8 @@ export class PegasusContract {
     end_time: number,
     cliff_period: number,
   ) => {
-
-    const projectRegisterFee = BigInt(await this.getListingFeeNear());
+    console.log('here')
+    const projectRegisterFee = BigInt(await this.getListingFee());
     const callbackUrl = `${window.location.origin}/project/`;
     const balance = await inTokenContract!.getFtBalanceOfOwner(this.pegasusContract.contractId);
     const inTokenMetadata = await inTokenContract!.getFtMetadata();
@@ -88,7 +88,6 @@ export class PegasusContract {
       msg_data: JSON.stringify({
         title,
         sub_title,
-        token_ticker:'t',
         logo,
         starting_price: starting_price * (10 ** inTokenMetadata.decimals),
         email,
@@ -106,10 +105,12 @@ export class PegasusContract {
         cliff_period: cliff_period.toString(),
       })
     });
-
+    console.log(BigNumber(balance))
     if (BigNumber(balance) > BigNumber(0)) {
+      console.log('here')
       return await inTokenContract.ftTransferCall(this.pegasusContract.contractId, attachDeposit.toString(), msg, callbackUrl);
     } else {
+      console.log('2 functions hree')
       const account: any = await this.near.account(accoun_id);
       await account.signAndSendTransaction(
         this.pegasusContract.contractId,
@@ -213,7 +214,7 @@ export class PegasusContract {
     amount: number | null
   ) => {
 
-    const raffleCreationFee = BigInt(await this.getListingFeeNear());
+    const raffleCreationFee = BigInt(await this.getListingFee());
 
     const attachDeposit = (raffleCreationFee);
     const callbackUrl = `${window.location.origin}/projects/`;

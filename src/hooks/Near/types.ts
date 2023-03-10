@@ -41,7 +41,6 @@ export interface Project {
   owner_id: string,
   title: string,
   sub_title: string,
-  token_ticker: string,
   logo: string,
   starting_price: number,
   email: string,

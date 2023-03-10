@@ -1,16 +1,29 @@
 import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GridItem, Flex, Button, Grid, Box, HStack, Icon, Progress, VStack, Text, Image, Input } from "@chakra-ui/react";
-import { BiChevronLeft as ArrowLeftIcon } from 'react-icons/bi';
-import { BiDownArrowAlt as ArrowDownIcon } from 'react-icons/bi'
+import {
+  GridItem,
+  Flex,
+  Button,
+  Grid,
+  Box,
+  HStack,
+  Icon,
+  Progress,
+  VStack,
+  Text,
+  Image,
+  Input,
+} from "@chakra-ui/react";
+import { BiChevronLeft as ArrowLeftIcon } from "react-icons/bi";
+import { BiDownArrowAlt as ArrowDownIcon } from "react-icons/bi";
 import TitleCard from "../components/TitleCard";
 import Loading from "../components/Loading";
 import { useBalance, useColor, useNearContext, useProject } from "../hooks";
 import { ShortMonthNames, TimeDivision, TokenDecimals } from "../utils/const";
-import { NftImageType } from '../types';
-import SettingDarkIcon from '../assets/img/icons/settingOff.svg'
-import LiveListingStar from '../assets/img/icons/live-listing-star.svg'
-import USDT from '../assets/img/icons/usdt.svg'
+import { NftImageType } from "../types";
+import SettingDarkIcon from "../assets/img/icons/settingOff.svg";
+import LiveListingStar from "../assets/img/icons/live-listing-star.svg";
+import USDT from "../assets/img/icons/usdt.svg";
 import ParticipatedCard from "../components/ParticipatedCard";
 import InfoCard from "../components/InfoCard";
 import { FtContract } from "../hooks/Near/classWrappers";
@@ -26,60 +39,71 @@ export default function SettingCard() {
   const userBalance = getBalance(Number(projectId));
   const [editDetail, setEditDetail] = useState<boolean>(true);
   const fileUploadInputRef = useRef<HTMLInputElement | null>(null);
-  const [imageUpload, setImageUpload] = useState<File | null>(new File([], ''));
+  const [imageUpload, setImageUpload] = useState<File | null>(new File([], ""));
   const [imageUploadUri, setImageUploadUri] = useState<string>();
-  const [imageUploadBlob, setImageUploadBlob] = useState<Blob | null>(new Blob());
+  const [imageUploadBlob, setImageUploadBlob] = useState<Blob | null>(
+    new Blob()
+  );
   const [cropperInstance, setCropperInstance] = useState<Cropper>();
   const [isCropped, setIsCropped] = useState<boolean>(false);
-  const [decimals, setDecimals] = useState<number>(10 ** 6)
+  const [decimals, setDecimals] = useState<number>(10 ** 6);
   const now = Date.now();
   const icon = SettingDarkIcon;
 
   const handleBack = () => {
     navigate(-1);
-  }
+  };
 
   const handleDetail = () => {
     navigate(`./project/${projectId}`);
-  }
+  };
 
   const getDecimals = async (contractId: string) => {
     const ftContract = new FtContract(initFtContract(contractId));
     const metadata = await ftContract!.getFtMetadata();
-    setDecimals(10 ** metadata.decimals)
-  }
+    setDecimals(10 ** metadata.decimals);
+  };
 
-  if (project.isLoading || project.isError) return (< Loading />)
+  if (project.isLoading || project.isError) return <Loading />;
   else {
     getDecimals(project.value.out_token_account_id);
     const inTokenDecimals =
-      project.value.in_token_account_id == config.usdcContractId ? TokenDecimals.usdc :
-        project.value.in_token_account_id == config.usdtContractId ? TokenDecimals.usdt : TokenDecimals.near;
+      project.value.in_token_account_id == config.usdcContractId
+        ? TokenDecimals.usdc
+        : project.value.in_token_account_id == config.usdtContractId
+        ? TokenDecimals.usdt
+        : TokenDecimals.near;
 
     const startTime = project.value.start_time / TimeDivision;
     const endTime = project.value.end_time / TimeDivision;
-    const projectDuration = project.value.end_time / TimeDivision - project.value.start_time / TimeDivision;
+    const projectDuration =
+      project.value.end_time / TimeDivision -
+      project.value.start_time / TimeDivision;
     const expiredDuration = now - project.value.start_time / TimeDivision;
-    const progressValue = 100 * expiredDuration / projectDuration;
+    const progressValue = (100 * expiredDuration) / projectDuration;
     const ended = project.value.end_time / TimeDivision < now ? true : false;
-    const isActivated = project.value.end_time / TimeDivision < Date.now() || !project.value.is_activated ? false : true;
+    const isActivated =
+      project.value.end_time / TimeDivision < Date.now() ||
+      !project.value.is_activated
+        ? false
+        : true;
     // const estimatedTokenPurchased = (project.value.total_tokens * userDepositedBalance / project.value.total_deposits) / decimals;
 
     return (
       <>
-        <TitleCard title='Live Listings Panel' />
-        <Flex gap={1} paddingY="4" flexDirection={'column'}>
+        <TitleCard title="Live Listings Panel" />
+        <Flex gap={1} paddingY="4" flexDirection={"column"}>
           <Flex>
             <Button
-              variant='ghost'
-              colorScheme='purple'
+              variant="ghost"
+              colorScheme="purple"
               leftIcon={<ArrowLeftIcon />}
               onClick={handleBack}
             >
               Back
             </Button>
           </Flex>
-          <Grid templateColumns='repeat(3, 1fr)' gap={6}>
+          <Grid templateColumns="repeat(3, 1fr)" gap={6}>
             <ListCard
               projectId={project.value.project_id}
               title={project.value.title}
@@ -90,186 +114,253 @@ export default function SettingCard() {
               isActivated={isActivated}
               totalTokens={project.value.total_tokens}
               totalDeposits={project.value.total_deposits}
-              tokenTicker={project.value.token_ticker}
+              tokenTicker={project.value.title}
               logo={project.value.logo}
               outTokenId={project.value.out_token_account_id}
             />
             <GridItem colSpan={2}>
               <Flex
-                minHeight='14'
-                minWidth='12'
-                marginLeft='13px'
-                border='1px solid'
-                paddingTop='98px'
-                paddingBottom='71px'
+                minHeight="14"
+                minWidth="12"
+                marginLeft="13px"
+                border="1px solid"
+                paddingTop="98px"
+                paddingBottom="71px"
                 borderColor={color.cardBorder}
-                borderRadius='28px'
-                flexDirection='row'
+                borderRadius="28px"
+                flexDirection="row"
                 bgColor={color.panelbg}
-                position='relative'
+                position="relative"
               >
-                {editDetail ? (<Button
-                  aria-label='$'
-                  bgGradient='linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)'
-                  variant='solid'
-                  position='absolute'
-                  top='34'
-                  right='42'
-                  color={color.background}
-                  fontFamily='DM Sans'
-                  fontStyle='normal'
-                  fontWeight='500'
-                  fontSize='16px'
-                  _hover={{ bg: '#a3a3a3' }}
-                  onClick={() => setEditDetail(false)}
-                >
-                  EDIT DETAILS
-                </Button>) : (
-                  <Flex flexDirection='row' position='absolute' top='34' right='42'>
+                {editDetail ? (
+                  <Button
+                    aria-label="$"
+                    bgGradient="linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)"
+                    variant="solid"
+                    position="absolute"
+                    top="34"
+                    right="42"
+                    color={color.background}
+                    fontFamily="DM Sans"
+                    fontStyle="normal"
+                    fontWeight="500"
+                    fontSize="16px"
+                    _hover={{ bg: "#a3a3a3" }}
+                    onClick={() => setEditDetail(false)}
+                  >
+                    EDIT DETAILS
+                  </Button>
+                ) : (
+                  <Flex
+                    flexDirection="row"
+                    position="absolute"
+                    top="34"
+                    right="42"
+                  >
                     <Button
-                      bgGradient='linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)'
-                      variant='solid'
+                      bgGradient="linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)"
+                      variant="solid"
                       color={color.background}
-                      fontFamily='DM Sans'
-                      fontStyle='normal'
-                      fontWeight='500'
-                      fontSize='16px'
+                      fontFamily="DM Sans"
+                      fontStyle="normal"
+                      fontWeight="500"
+                      fontSize="16px"
                       onClick={() => setEditDetail(true)}
-                      _hover={{ bg: '#a3a3a3' }}
+                      _hover={{ bg: "#a3a3a3" }}
                     >
                       SAVE
                     </Button>
                     <Button
-                      bgGradient='linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)'
-                      variant='solid'
+                      bgGradient="linear-gradient(360deg, #111618 0%, #FFFFFF 122.97%)"
+                      variant="solid"
                       color={color.background}
-                      fontFamily='DM Sans'
-                      fontStyle='normal'
-                      fontWeight='500'
-                      fontSize='16px'
-                      marginLeft='10px'
-                      _hover={{ bg: '#a3a3a3' }}
+                      fontFamily="DM Sans"
+                      fontStyle="normal"
+                      fontWeight="500"
+                      fontSize="16px"
+                      marginLeft="10px"
+                      _hover={{ bg: "#a3a3a3" }}
                       onClick={() => setEditDetail(true)}
                     >
                       CANCEL
                     </Button>
                   </Flex>
-                )
-                }
+                )}
 
-                <Flex
-                  minHeight='14'
-                  maxWidth='50%'
-                  flexDirection='column'
-                >
-                  <Box
-                    marginLeft='55px'
-                    marginRight='20px'
-                  >
-                    <Flex flexDirection='column' marginBottom='17px'>
-                      <Text fontSize='12px' paddingBottom='4px' textAlign='left' color={color.black}>PROJECT NAME*</Text>
+                <Flex minHeight="14" maxWidth="50%" flexDirection="column">
+                  <Box marginLeft="55px" marginRight="20px">
+                    <Flex flexDirection="column" marginBottom="17px">
+                      <Text
+                        fontSize="12px"
+                        paddingBottom="4px"
+                        textAlign="left"
+                        color={color.black}
+                      >
+                        PROJECT NAME*
+                      </Text>
                       <Input
-                        minWidth='100%'
-                        maxHeight='30px'
-                        borderRadius='12px'
+                        minWidth="100%"
+                        maxHeight="30px"
+                        borderRadius="12px"
                         placeholder={project.value.title}
                         bgColor={color.background}
-                        shadow='lg'
-                        fontSize='14px'
-                        paddingY='8px'
-                        alignItems='center'
+                        shadow="lg"
+                        fontSize="14px"
+                        paddingY="8px"
+                        alignItems="center"
                         disabled={editDetail}
                       ></Input>
                     </Flex>
-                    <Flex flexDirection='column' marginBottom='13px'>
-                      <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px'>SUB TITLE*</Text>
+                    <Flex flexDirection="column" marginBottom="13px">
+                      <Text
+                        fontSize="12px"
+                        textAlign="left"
+                        color={color.black}
+                        paddingBottom="4px"
+                      >
+                        SUB TITLE*
+                      </Text>
                       <Input
-                        minWidth='100%'
-                        maxHeight='30px'
-                        borderRadius='12px'
+                        minWidth="100%"
+                        maxHeight="30px"
+                        borderRadius="12px"
                         placeholder={project.value.sub_title}
                         bgColor={color.background}
-                        fontSize='14px'
+                        fontSize="14px"
                         disabled={editDetail}
                       ></Input>
                     </Flex>
                     {/* Group 1 */}
-                    <Flex marginBottom='13px'>
-                      <Flex flexDirection='column' marginRight='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >IDO RECEIVABLE*</Text>
+                    <Flex marginBottom="13px">
+                      <Flex flexDirection="column" marginRight="12px">
+                        <Text
+                          fontSize="12px"
+                          textAlign="left"
+                          color={color.black}
+                          paddingBottom="4px"
+                        >
+                          IDO RECEIVABLE*
+                        </Text>
                         <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder='USDT.E'
+                          minWidth="100%"
+                          maxHeight="30px"
+                          borderRadius="12px"
+                          placeholder="USDT.E"
                           bgColor={color.background}
-                          fontSize='14px'
+                          fontSize="14px"
                           disabled={editDetail}
                         ></Input>
                       </Flex>
-                      <Flex flexDirection='column' marginLeft='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >TOKEN TICKER*</Text>
+                      <Flex flexDirection="column" marginLeft="12px">
+                        <Text
+                          fontSize="12px"
+                          textAlign="left"
+                          color={color.black}
+                          paddingBottom="4px"
+                        >
+                          TOKEN TICKER*
+                        </Text>
                         <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder={project.value.token_ticker}
+                          minWidth="100%"
+                          maxHeight="30px"
+                          borderRadius="12px"
+                          placeholder={project.value.title}
                           bgColor={color.background}
-                          fontSize='14px'
+                          fontSize="14px"
                           disabled={editDetail}
                         ></Input>
                       </Flex>
                     </Flex>
                     {/* Group 2 */}
-                    <Flex marginBottom='13px'>
-                      <Flex flexDirection='column' marginRight='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >STATUS*</Text>
+                    <Flex marginBottom="13px">
+                      <Flex flexDirection="column" marginRight="12px">
+                        <Text
+                          fontSize="12px"
+                          textAlign="left"
+                          color={color.black}
+                          paddingBottom="4px"
+                        >
+                          STATUS*
+                        </Text>
                         <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder={project.value.is_activated ? 'PAID' : 'UNPAID'}
+                          minWidth="100%"
+                          maxHeight="30px"
+                          borderRadius="12px"
+                          placeholder={
+                            project.value.is_activated ? "PAID" : "UNPAID"
+                          }
                           bgColor={color.background}
-                          fontSize='14px'
+                          fontSize="14px"
                           disabled={editDetail}
                         ></Input>
                       </Flex>
-                      <Flex flexDirection='column' marginLeft='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >TOKEN PRICE(USD)*</Text>
+                      <Flex flexDirection="column" marginLeft="12px">
+                        <Text
+                          fontSize="12px"
+                          textAlign="left"
+                          color={color.black}
+                          paddingBottom="4px"
+                        >
+                          TOKEN PRICE(USD)*
+                        </Text>
                         <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder={(project.value.starting_price / inTokenDecimals).toString()}
+                          minWidth="100%"
+                          maxHeight="30px"
+                          borderRadius="12px"
+                          placeholder={(
+                            project.value.starting_price / inTokenDecimals
+                          ).toString()}
                           bgColor={color.background}
-                          fontSize='14px'
+                          fontSize="14px"
                           disabled={editDetail}
                         ></Input>
                       </Flex>
                     </Flex>
                     {/* Group 3 */}
-                    <Flex marginBottom='13px'>
-                      <Flex flexDirection='column' marginRight='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >START DATE & TIME*</Text>
+                    <Flex marginBottom="13px">
+                      <Flex flexDirection="column" marginRight="12px">
+                        <Text
+                          fontSize="12px"
+                          textAlign="left"
+                          color={color.black}
+                          paddingBottom="4px"
+                        >
+                          START DATE & TIME*
+                        </Text>
                         <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder={`${new Date(startTime).toLocaleDateString()} ${new Date(startTime).toLocaleTimeString()}`}
+                          minWidth="100%"
+                          maxHeight="30px"
+                          borderRadius="12px"
+                          placeholder={`${new Date(
+                            startTime
+                          ).toLocaleDateString()} ${new Date(
+                            startTime
+                          ).toLocaleTimeString()}`}
                           bgColor={color.background}
-                          fontSize='14px'
+                          fontSize="14px"
                           disabled={editDetail}
                         ></Input>
                       </Flex>
-                      <Flex flexDirection='column' marginLeft='12px'>
-                        <Text fontSize='12px' textAlign='left' color={color.black} paddingBottom='4px' >END DATE & TIME*</Text>
+                      <Flex flexDirection="column" marginLeft="12px">
+                        <Text
+                          fontSize="12px"
+                          textAlign="left"
+                          color={color.black}
+                          paddingBottom="4px"
+                        >
+                          END DATE & TIME*
+                        </Text>
                         <Input
-                          minWidth='100%'
-                          maxHeight='30px'
-                          borderRadius='12px'
-                          placeholder={`${new Date(endTime).toLocaleDateString()} ${new Date(endTime).toLocaleTimeString()}`}
+                          minWidth="100%"
+                          maxHeight="30px"
+                          borderRadius="12px"
+                          placeholder={`${new Date(
+                            endTime
+                          ).toLocaleDateString()} ${new Date(
+                            endTime
+                          ).toLocaleTimeString()}`}
                           bgColor={color.background}
-                          fontSize='14px'
+                          fontSize="14px"
                           disabled={editDetail}
                         ></Input>
                       </Flex>
@@ -278,71 +369,104 @@ export default function SettingCard() {
                 </Flex>
                 {/* image here */}
                 <Flex
-                  minHeight='14'
-                  maxWidth='50%'
-                  borderRadius='12px'
+                  minHeight="14"
+                  maxWidth="50%"
+                  borderRadius="12px"
                   //justifyContent='center'
-                  alignItems='center'
+                  alignItems="center"
                 >
                   {editDetail ? (
-                    <Box width='90%' bgColor={color.background} position='relative'>
-                      <Image src={project.value.logo} padding='28px' width={'100%'}></Image>
+                    <Box
+                      width="90%"
+                      bgColor={color.background}
+                      position="relative"
+                    >
+                      <Image
+                        src={project.value.logo}
+                        padding="28px"
+                        width={"100%"}
+                      ></Image>
                     </Box>
                   ) : (
-                    <Box maxWidth='90%' bgColor={color.background} position='relative' >
-                      <Image src={LiveListingStar} padding='28px' opacity='10%' ></Image>
-                      <Flex flexDirection='column' position='absolute' top='40%' left='30%' justifyContent='center'>
+                    <Box
+                      maxWidth="90%"
+                      bgColor={color.background}
+                      position="relative"
+                    >
+                      <Image
+                        src={LiveListingStar}
+                        padding="28px"
+                        opacity="10%"
+                      ></Image>
+                      <Flex
+                        flexDirection="column"
+                        position="absolute"
+                        top="40%"
+                        left="30%"
+                        justifyContent="center"
+                      >
                         <Input
-                          fontFamily='DM Sans'
-                          fontStyle='normal'
-                          fontWeight='700'
-                          fontSize='40px'
-                          type='button'
+                          fontFamily="DM Sans"
+                          fontStyle="normal"
+                          fontWeight="700"
+                          fontSize="40px"
+                          type="button"
                           //lineHeight='52px'
                           //textAlign='center'
-                          variant='unstyled'
+                          variant="unstyled"
                           color={color.yellow}
-                          value='LOGO'
-                          cursor='pointer'
-                          _hover={{ color: '#3200ff' }}
-                          _active={{ color: '#ffffff' }}
-                          onClick={() => { fileUploadInputRef.current?.click() }}
+                          value="LOGO"
+                          cursor="pointer"
+                          _hover={{ color: "#3200ff" }}
+                          _active={{ color: "#ffffff" }}
+                          onClick={() => {
+                            fileUploadInputRef.current?.click();
+                          }}
                           readOnly
                         ></Input>
-                        <input type='file' name='image' onChange={(e) => {
-                          if (!e.target.files) return;
-                          setImageUpload(e.target.files.item(0))
+                        <input
+                          type="file"
+                          name="image"
+                          onChange={(e) => {
+                            if (!e.target.files) return;
+                            setImageUpload(e.target.files.item(0));
 
-                          const reader = new FileReader();
-                          reader.onload = () => {
-                            if (!reader.result) return;
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              if (!reader.result) return;
 
-                            setImageUploadUri(reader.result.toString());
-                            setIsCropped(false);
-                          };
-                          reader.readAsDataURL(e.target.files?.item(0) as Blob);
-                          setImageUploadBlob(e.target.files?.item(0) as Blob)
-                        }} accept={NftImageType} style={{ display: 'none' }} ref={fileUploadInputRef} />
+                              setImageUploadUri(reader.result.toString());
+                              setIsCropped(false);
+                            };
+                            reader.readAsDataURL(
+                              e.target.files?.item(0) as Blob
+                            );
+                            setImageUploadBlob(e.target.files?.item(0) as Blob);
+                          }}
+                          accept={NftImageType}
+                          style={{ display: "none" }}
+                          ref={fileUploadInputRef}
+                        />
                         <Text
-                          fontFamily='DM Sans'
-                          fontStyle='normal'
-                          fontWeight='500'
-                          fontSize='16px'
-                          textAlign='center'
-                          marginTop='1rem'
+                          fontFamily="DM Sans"
+                          fontStyle="normal"
+                          fontWeight="500"
+                          fontSize="16px"
+                          textAlign="center"
+                          marginTop="1rem"
                           color={color.yellow}
-                        >DRAG & DROP LOGO</Text>
+                        >
+                          DRAG & DROP LOGO
+                        </Text>
                       </Flex>
                     </Box>
-                  )
-                  }
+                  )}
                 </Flex>
               </Flex>
             </GridItem>
           </Grid>
         </Flex>
       </>
-    )
+    );
   }
-
 }
