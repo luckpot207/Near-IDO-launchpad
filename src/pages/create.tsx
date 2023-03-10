@@ -32,6 +32,7 @@ import {
   useNearContext,
   useNearLogin,
   ProjectInput,
+  useTxOutcome
 } from "../hooks";
 import { FtContract } from "../hooks/Near/classWrappers";
 import { NftImageType } from "../types";
@@ -226,6 +227,16 @@ export default function Create() {
     if (isLoggedInNear) getUserBalance();
   }, [isLoggedInNear, inTokenContract]);
 
+
+  useTxOutcome((outcome) => {
+    console.log(outcome);
+    if (outcome.success && outcome.originalFunctionCall?.methodName === "ft_transfer_call") {
+      alert("Succeed");
+    } else if (!outcome.success) {
+      alert("Failed");
+    }
+  });
+
   useEffect(() => {
     getListingFee();
   }, []);
@@ -315,10 +326,10 @@ export default function Create() {
                   fontWeight="bold"
                   marginY={2}
                 >
-                  500
+                  $500
                 </Text>
                 <Text as="h2" fontSize="16px" textAlign="center">
-                  - {Payment[inTokenId]} -
+                  - USD -
                 </Text>
               </Flex>
               <Flex alignItems="center" flexDirection="column" marginY={8}>
@@ -425,7 +436,7 @@ export default function Create() {
                     {"AVAILABLE TO SEND"}
                   </Text>
                   <Text as="h2" fontSize="18px" textAlign="end">
-                    {userBalance}
+                    {`$${userBalance}`}
                   </Text>
                 </Flex>
                 <Flex
@@ -479,7 +490,7 @@ export default function Create() {
                     {"BALANCE TO UPDATE"}
                   </Text>
                   <Text as="h2" fontSize="18px" textAlign="end" color={"blue"}>
-                    {Number(userBalance) - listingFee}
+                    {`$${Number(userBalance) - listingFee}`}
                   </Text>
                 </Flex>
               </Flex>
