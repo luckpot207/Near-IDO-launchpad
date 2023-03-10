@@ -30,7 +30,7 @@ export function getConfig(env: string): NearAppConfig {
             return {
                 networkId: "testnet",
                 nodeUrl: "https://rpc.testnet.near.org",
-                pegasusContractId: 'pegasus005.testnet',
+                pegasusContractId: 'pegasus006.testnet',
                 walletUrl: "https://wallet.testnet.near.org",
                 helperUrl: "https://helper.testnet.near.org",
                 explorerUrl: "https://explorer.testnet.near.org",
