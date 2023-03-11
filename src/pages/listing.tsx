@@ -490,7 +490,7 @@ export default function Listing() {
                       textAlign={"justify"}
                       paddingY="4"
                     >
-                      You are about to deposit funds to STARLUX pool. Please
+                      You are about to deposit funds to {project.value.title} pool. Please
                       input the amount intended
                     </Text>
                   </Flex>
@@ -675,7 +675,7 @@ export default function Listing() {
                       textAlign={"justify"}
                       paddingY="4"
                     >
-                      You are about to withdraw funds from STARLUX pool to your
+                      You are about to withdraw funds from {project.value.title} pool to your
                       wallet. Please input the amount intended
                     </Text>
                   </Flex>
